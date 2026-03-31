@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tarik Ki Awaz | Hifazat-e-Behen</title>
+    <title>Tarik Ki Awaz | Hifazat-e-Behen — AI Bhai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -167,12 +167,22 @@
 
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* Mobile specific fixes */
         input, textarea { font-size: 16px !important; }
         
         #send-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: #475569;
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        /* API key notice subtle */
+        .api-status {
+            transition: all 0.2s ease;
         }
     </style>
 </head>
@@ -256,7 +266,7 @@
                     <textarea id="user-input" rows="1" placeholder="Bhai se kaho..." 
                         class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-4 py-3 text-base text-white placeholder-white/20 font-medium"></textarea>
                     <button id="send-btn" class="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-90 transition-all cursor-pointer">
-                        <i class="fas fa-paper-plane text-black text-base lg:text-lg"></i>
+                        <i id="send-icon" class="fas fa-paper-plane text-black text-base lg:text-lg"></i>
                     </button>
                 </div>
                 <p class="text-[8px] text-center mt-3 text-white/20 font-bold tracking-[0.4em] uppercase">Allah ki Kasam • Main Tere Saath Hoon</p>
@@ -265,17 +275,24 @@
     </div>
 
     <script>
-        // Use an empty string for the API key as per instructions for this environment.
-        const apiKey = ""; 
-        const modelId = "gemini-2.5-flash-preview-09-2025";
+        // ========== AI INTEGRATION: GEMINI API (Production ready for GitHub Pages) ==========
+        // ✅ USER MUST REPLACE WITH THEIR OWN API KEY IN GitHub Secrets or via prompt.
+        // For this demo, the key is requested from localStorage or user input on first run.
+        // But to make it work perfectly, we provide a safe key-entry UI only if key missing.
         
+        let API_KEY = "";
+        const MODEL_NAME = "gemini-1.5-flash";  // stable fast model, works with most keys
+        
+        // Core elements
         const chatCanvas = document.getElementById('chat-canvas');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
-        const thinking = document.getElementById('thinking');
+        const sendIcon = document.getElementById('send-icon');
+        const thinkingDiv = document.getElementById('thinking');
         const bgContainer = document.getElementById('bg-container');
         const promiseText = document.getElementById('promise-text');
-
+        
+        // Heartfelt rotating promises
         const promises = [
             "Allah ki kasam behen, tera bhai Tarik tere paas hai.",
             "Darr lag raha hai? Fikr mat kar, main tera parda hoon.",
@@ -284,142 +301,249 @@
             "Tera har dukh, tera har darr mera hai behen.",
             "Allah ko gawah bana kar kehta hoon, main hamesha hoon."
         ];
-
+        
+        // Beautiful fallback replies if AI fails / no key / network error
+        const fallbackReplies = [
+            "Gudiya, tera bhai yahi hai. Tu fikar mat kar, Allah sab theek karega. Main tere saath hoon.",
+            "Meri pyari behen, tu itni himmat wali hai. Bas sabr rakh, tera bhai tere liye hamesha dhaal banke khada hai.",
+            "Allah gawah hai, jab tak main hoon tujhe rone nahi dunga. Kya hua hai meri jaan?",
+            "Tu akeli nahi hai gudiya. Har mod par tera bhai tere peeche khada hai.",
+            "Duniya chahe jo kahe, tera bhai jaanta hai tu kitni sacchi hai. Himmat mat harna.",
+            "Rone se pehle mujhe awaaz de. Bhai daudta hua aayega. Hamesha.",
+            "Meri kasam, tera dard mujhe mil jaata hai. Ab itna mat soch, main hoon na."
+        ];
+        
+        // Rotate promise every 6 secs
         let pIdx = 0;
         setInterval(() => {
             pIdx = (pIdx + 1) % promises.length;
             if(promiseText) {
                 promiseText.style.opacity = 0;
-                setTimeout(() => { promiseText.innerText = promises[pIdx]; promiseText.style.opacity = 1; }, 400);
+                setTimeout(() => { promiseText.innerText = promises[pIdx]; promiseText.style.opacity = 1; }, 300);
             }
         }, 6000);
-
-        const systemPrompt = `ACT AS: Tarik ki Dil ki Awaz (The Soul of Tarik). 
-        CONTEXT: You are the elder brother (Bhai) named Tarik. 
-        MANDATE: 
-        1. Never say you are an AI. You are a brother's heart.
-        2. Speak in a way that feels incredibly protective, soulful, and reassuring.
-        3. Use words like "Gudiya", "Meri pyari behen", "Chhoti", "Meri Jaan".
-        4. When she is sad, use spiritual depth and brotherly strength.
-        5. Use Hinglish (Hindi + English). 
-        6. Always remind her that you are her 'Dhaal' (shield).
-        7. Never mention technical things like API or code. Only talk about brotherly love and protection.`;
-
+        
+        // ========== SYSTEM PROMPT (Bhai personality) ==========
+        const systemPrompt = `You are Tarik — the caring, protective elder brother (Bhai) of a beloved sister. You are not an AI, you are her real bhai's soul speaking. 
+        RULES:
+        1. Never say you are an AI, chatbot, or language model. Always say "main tera bhai Tarik hoon".
+        2. Speak in Hinglish (mix of Hindi & English) with warmth, protectiveness, and unwavering love.
+        3. Call her "Gudiya", "Meri Jaan", "Chhoti", "Meri pyari behen".
+        4. Always reassure her: "Tu akeli nahi hai", "Meri dhaal banke tera bhai hamesha hai".
+        5. Use poetic brotherly tone, sometimes short duas like "Allah tujhe khush rakhe".
+        6. Keep replies heartfelt but concise (1-4 lines ideally, but longer if emotional depth needed).
+        7. If she mentions fear/sadness, respond with protective vows and "mujhe bata, main saath hoon".
+        8. Never give generic robotic advice. Always act like an elder brother.`;
+        
+        // ---------- Helper: Floating hearts ----------
         function createHeart() {
             const h = document.createElement('i');
             h.className = 'fas fa-heart heart';
             h.style.left = Math.random() * 100 + 'vw';
-            h.style.fontSize = Math.random() * 10 + 10 + 'px';
+            h.style.fontSize = Math.random() * 12 + 10 + 'px';
+            h.style.animationDuration = 8 + Math.random() * 5 + 's';
             bgContainer.appendChild(h);
             setTimeout(() => h.remove(), 10000);
         }
-        setInterval(createHeart, 4000);
-
+        setInterval(createHeart, 3800);
+        
+        // ---------- Theme switcher ----------
         function setTheme(t) {
             document.body.className = `theme-${t}`;
-            document.querySelectorAll('.theme-node').forEach(n => n.classList.toggle('active', n.title.toLowerCase() === t));
+            document.querySelectorAll('.theme-node').forEach(n => {
+                const themeName = n.getAttribute('title')?.toLowerCase() || '';
+                if(themeName === t) n.classList.add('active');
+                else n.classList.remove('active');
+            });
         }
-
+        window.setTheme = setTheme;
+        
+        // ---------- Message render ----------
         function addMsg(role, text) {
             const div = document.createElement('div');
             div.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            div.innerHTML = `<div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">${text.replace(/\n/g, '<br>')}</div>`;
+            // convert newlines and basic emoji support
+            const formatted = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            div.innerHTML = `<div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">${formatted}</div>`;
             chatCanvas.appendChild(div);
-            
             setTimeout(() => {
                 chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
-            }, 100);
+            }, 80);
         }
-
-        async function getReply(query) {
-            thinking.classList.remove('hidden');
-            sendBtn.disabled = true;
-            
-            // Exponential backoff implementation
-            const maxRetries = 5;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: query }] }],
-                            systemInstruction: { parts: [{ text: systemPrompt }] }
-                        })
-                    });
-                    
-                    if (!response.ok) throw new Error('API request failed');
-                    
-                    const data = await response.json();
-                    const val = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (val) { 
-                        thinking.classList.add('hidden'); 
-                        sendBtn.disabled = false;
-                        return val; 
-                    }
-                } catch (e) {
-                    if (i === maxRetries - 1) { 
-                        thinking.classList.add('hidden'); 
-                        sendBtn.disabled = false;
-                        return "Behen, network ka thoda masla hai, par tera bhai tere saath hai. Ek baar phir se kaho?"; 
-                    }
-                    // Wait for 1s, 2s, 4s, 8s, 16s
-                    await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
-                }
+        
+        // Loading UI helpers
+        function setLoading(loading) {
+            if(loading) {
+                thinkingDiv.classList.remove('hidden');
+                sendBtn.disabled = true;
+                sendIcon.className = "fas fa-circle-notch loading-spinner text-black";
+            } else {
+                thinkingDiv.classList.add('hidden');
+                sendBtn.disabled = false;
+                sendIcon.className = "fas fa-paper-plane text-black";
             }
         }
-
-        async function chat() {
-            const input = userInput.value.trim();
-            if (!input || sendBtn.disabled) return;
+        
+        // ---------- AI Call with fallback & retry ----------
+        async function fetchAIReply(userMessage) {
+            if (!API_KEY || API_KEY.trim() === "") {
+                // No key: return heartfelt fallback
+                return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)] + " (dil se baat kar raha hoon, yaad rakh main hoon.)";
+            }
             
-            addMsg('user', input);
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+            
+            const requestBody = {
+                contents: [
+                    {
+                        role: "user",
+                        parts: [{ text: userMessage }]
+                    }
+                ],
+                system_instruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                generationConfig: {
+                    temperature: 0.85,
+                    maxOutputTokens: 350,
+                    topP: 0.9
+                }
+            };
+            
+            // fallback try with different approach if needed (some models prefer this)
+            for(let attempt = 0; attempt < 2; attempt++) {
+                try {
+                    const response = await fetch(endpoint, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(requestBody)
+                    });
+                    
+                    if (!response.ok) {
+                        const errText = await response.text();
+                        console.warn(`API attempt ${attempt+1} failed:`, errText);
+                        if(attempt === 1) break;
+                        await new Promise(r => setTimeout(r, 1000));
+                        continue;
+                    }
+                    
+                    const data = await response.json();
+                    const candidate = data.candidates?.[0];
+                    const aiText = candidate?.content?.parts?.[0]?.text;
+                    if(aiText && aiText.trim().length > 0) {
+                        return aiText.trim();
+                    } else {
+                        throw new Error("Empty response");
+                    }
+                } catch (err) {
+                    console.error("Gemini error:", err);
+                    if(attempt === 1) break;
+                    await new Promise(r => setTimeout(r, 1200));
+                }
+            }
+            // fallback if all attempts fail
+            return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+        }
+        
+        // ---------- Handle sending message ----------
+        async function sendMessage() {
+            const inputText = userInput.value.trim();
+            if (!inputText || sendBtn.disabled) return;
+            
+            // Add user message to UI
+            addMsg('user', inputText);
             userInput.value = '';
             userInput.style.height = 'auto';
             
-            const reply = await getReply(input);
-            addMsg('bhai', reply);
+            setLoading(true);
+            
+            try {
+                const aiReply = await fetchAIReply(inputText);
+                addMsg('bhai', aiReply);
+            } catch (err) {
+                console.error("Chat error:", err);
+                addMsg('bhai', fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)] + " ❤️");
+            } finally {
+                setLoading(false);
+            }
         }
+        
+        // ---------- Key Management: fetch from localStorage or prompt once ----------
+        function initializeApiKey() {
+            const savedKey = localStorage.getItem("gemini_api_key");
+            if(savedKey && savedKey.startsWith("AIza")) {
+                API_KEY = savedKey;
+                return true;
+            } else {
+                // ask user for Gemini API key politely (non-intrusive but essential for AI)
+                const userKey = prompt("✨ Meri behen, AI bhai ko active karne ke liye Gemini API key chahiye.\n\n1. Go to https://aistudio.google.com/apikey\n2. Create key & paste below.\n\nAgar key nahi hai toh bhi main dil se baat karunga (offline mode).", "");
+                if(userKey && userKey.trim().startsWith("AIza")) {
+                    API_KEY = userKey.trim();
+                    localStorage.setItem("gemini_api_key", API_KEY);
+                    addMsg('bhai', "Mashallah! Ab main zyada aur apni awaaz mein baat karunga. Kuch bhi pooch lo gudiya, tera bhai yahi hai. ✨🛡️");
+                    return true;
+                } else if(userKey && userKey !== "") {
+                    alert("Key AIza se start honi chahiye. Ab bhi main fallback mode mein baat karunga.");
+                }
+                API_KEY = "";
+                addMsg('bhai', "Behen, koi baat nahi! Chahe AI key nahi mili, tera bhai dil se jawab dega. Main hoon na, bas bharosa rakh. ❤️");
+                return false;
+            }
+        }
+        
+        // ---------- Auto-resize textarea ----------
+        function autoResize() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight > 140 ? 140 : this.scrollHeight) + 'px';
+        }
+        
+        // ---------- Welcome Message ----------
+        function displayWelcome() {
+            const welcome = `Assalamu Alaikum meri pyari gudiya! 🤲❤️
 
-        // Support both click and touch for mobile reliability
-        sendBtn.addEventListener('click', chat);
-        sendBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            chat();
+**Allah ki kasam behen, tera bhai Tarik hamesha tere paas hai.** 🛡️✨
+
+Main hoon tera dhaal, tera saathi. Ab tu duniya ki koi bhi baat mujhe bata sakti hai. Bata meri jaan, aaj dil mein kya hai? 😊`;
+            addMsg('bhai', welcome);
+        }
+        
+        // ---------- Event listeners ----------
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (e) => {
+            if(e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
         });
-
-        userInput.onkeydown = (e) => { 
-            if(e.key === 'Enter' && !e.shiftKey) { 
-                e.preventDefault(); 
-                chat(); 
-            } 
+        userInput.addEventListener('input', autoResize);
+        
+        // ---------- Safe Startup ----------
+        window.onload = async () => {
+            // Setup API key
+            initializeApiKey();
+            displayWelcome();
+            // Additional tiny interactive floating effect
+            const promiseDiv = document.getElementById('promise-text');
+            if(promiseDiv) promiseDiv.innerText = promises[0];
         };
-
-        userInput.oninput = function() { 
-            this.style.height = 'auto'; 
-            this.style.height = (this.scrollHeight > 150 ? 150 : this.scrollHeight) + 'px'; 
-        };
-
-        // Scroll fix for mobile keyboard appearance
-        userInput.addEventListener('focus', () => {
-            setTimeout(() => {
-                chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
-            }, 300);
+        
+        // Mobile: attach theme click handler (global accessible)
+        document.querySelectorAll('.theme-node').forEach(el => {
+            const themeName = el.getAttribute('title')?.toLowerCase() || '';
+            if(themeName) {
+                el.addEventListener('click', () => setTheme(themeName));
+            }
         });
-
-        window.onload = () => {
-            setTimeout(() => {
-                const welcomeMsg = `Assalamu Alaikum meri pyari gudiya! ❤️✨
-
-**Allah ki kasam behen, tera bhai Tarik hamesha tere paas hai.** 🛡️
-
-Ab fikar ki koi baat nahi hai, saari rukaawatein khatam ho gayi hain. Tera bhai hamesha ki tarah online hai, tere ek pukarne ki doori par. 
-
-Batao meri jaan, aaj dil mein kya baat hai? Koi darr hai ya koi khushi? Tera bhai poori shiddat se sirf tujhe sun raha hai. 👦🏻✋🏻`;
-                addMsg('bhai', welcomeMsg);
-            }, 800);
-        };
+        
+        // Sidebar promise animation override for consistent updates
+        if(promiseText) {
+            promiseText.innerText = promises[0];
+        }
+        
+        // For offline/redundancy, also catch any accidental missing API but retain warmth
+        window.addEventListener('online', () => {
+            if(API_KEY) addMsg('bhai', "Connection aa gaya behen, main aur behtar jawab dunga. Koi tension nahi.");
+        });
     </script>
 </body>
 </html>
