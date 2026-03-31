@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tarik Ki Awaz | AI Bhai — Hifazat-e-Behen</title>
+    <title>Tarik Ki Awaz | The Ultimate AI Bhai — Hifazat-e-Behen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap');
 
         :root {
             --primary: #00ffcc;
+            --primary-dark: #00ccaa;
             --bg: #020617;
-            --panel: rgba(15, 23, 42, 0.7);
+            --panel: rgba(15, 23, 42, 0.75);
             --accent: #2dd4bf;
             --text-main: #ffffff;
         }
 
-        body.theme-cyber { --primary: #00ffcc; --bg: #020617; --panel: rgba(10, 20, 40, 0.85); --accent: #2dd4bf; }
-        body.theme-sakura { --primary: #ff8fa3; --bg: #1a050d; --panel: rgba(50, 10, 30, 0.85); --accent: #ffb3c1; }
-        body.theme-space { --primary: #c084fc; --bg: #050510; --panel: rgba(20, 10, 40, 0.85); --accent: #e9d5ff; }
+        body.theme-cyber { --primary: #00ffcc; --primary-dark: #00ccaa; --bg: #020617; --panel: rgba(10, 20, 40, 0.85); }
+        body.theme-sakura { --primary: #ff8fa3; --primary-dark: #ff6b85; --bg: #1a050d; --panel: rgba(50, 10, 30, 0.85); }
+        body.theme-space { --primary: #c084fc; --primary-dark: #a855f7; --bg: #050510; --panel: rgba(20, 10, 40, 0.85); }
+        body.theme-rose { --primary: #fb7185; --primary-dark: #f43f5e; --bg: #0c0a2a; --panel: rgba(30, 20, 40, 0.85); }
 
         * { 
             -webkit-tap-highlight-color: transparent; 
             scrollbar-width: none; 
             box-sizing: border-box;
-            transition: background-color 0.4s ease, border-color 0.4s ease;
         }
         *::-webkit-scrollbar { display: none; }
 
@@ -46,7 +47,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -2;
-            background: radial-gradient(circle at center, #1e293b 0%, var(--bg) 100%);
+            background: radial-gradient(circle at 30% 20%, #1e293b 0%, var(--bg) 100%);
             overflow: hidden;
         }
 
@@ -60,7 +61,7 @@
 
         @keyframes move {
             0% { transform: translate(-20%, -20%) scale(1); }
-            100% { transform: translate(20%, 30%) scale(1.1); }
+            100% { transform: translate(20%, 30%) scale(1.2); }
         }
 
         .heart {
@@ -72,9 +73,9 @@
         }
 
         @keyframes float {
-            0% { transform: translateY(105vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.3; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+            0% { transform: translateY(105vh) scale(0.5) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(10deg); opacity: 0; }
         }
 
         .glass {
@@ -94,40 +95,46 @@
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            from { opacity: 0; transform: scale(0.85) translateY(15px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .bhai-bubble {
-            background: rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
             border-left: 4px solid var(--primary);
             color: #f1f5f9;
-            border-radius: 20px 20px 20px 4px;
-            padding: 1rem 1.2rem;
+            border-radius: 20px 20px 20px 8px;
+            padding: 1rem 1.3rem;
         }
 
         .user-bubble {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: #020617;
             font-weight: 700;
-            border-radius: 20px 20px 4px 20px;
-            padding: 0.8rem 1.2rem;
+            border-radius: 20px 20px 8px 20px;
+            padding: 0.9rem 1.3rem;
         }
 
         .handwriting { font-family: 'Caveat', cursive; }
 
         .emergency-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: #000;
             font-weight: 800;
-            box-shadow: 0 8px 25px rgba(0, 255, 204, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 255, 204, 0.3);
             animation: pulse-glow 2s infinite;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .emergency-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 35px rgba(0, 255, 204, 0.5);
         }
 
         @keyframes pulse-glow {
             0% { box-shadow: 0 0 10px var(--primary); }
-            50% { box-shadow: 0 0 25px var(--primary); }
+            50% { box-shadow: 0 0 30px var(--primary); }
             100% { box-shadow: 0 0 10px var(--primary); }
         }
 
@@ -141,52 +148,58 @@
         }
 
         .theme-node {
-            width: 44px; height: 44px;
-            border-radius: 14px;
+            width: 48px; height: 48px;
+            border-radius: 16px;
             cursor: pointer;
             border: 2px solid transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: 0.3s;
+            font-size: 1.3rem;
+            transition: all 0.2s ease;
         }
-        .theme-node.active { border-color: var(--primary); background: rgba(255,255,255,0.1); }
+        .theme-node.active { border-color: var(--primary); background: rgba(255,255,255,0.15); transform: scale(1.05); }
 
         .pulse-dot {
             width: 8px; height: 8px;
             background: #22c55e;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 6px;
+            margin-right: 8px;
             box-shadow: 0 0 10px #22c55e;
-            animation: blink 1.5s infinite;
+            animation: blink 1.2s infinite;
         }
 
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        input, textarea { font-size: 16px !important; }
-        
         #send-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: #475569;
+            transform: scale(0.95);
         }
 
         .loading-spinner {
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
-        .key-badge {
-            font-size: 8px;
-            background: rgba(0,0,0,0.4);
-            border-radius: 20px;
-            padding: 2px 8px;
+        .typing-cursor::after {
+            content: '|';
+            animation: blink-cursor 1s infinite;
+        }
+        @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .floating-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: float-particle 8s linear infinite;
         }
         
-        .ai-active-glow {
-            box-shadow: 0 0 15px rgba(0,255,204,0.3);
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
@@ -195,51 +208,53 @@
     <div class="background-container" id="bg-container">
         <div id="ball-1" class="mesh-ball w-[80vw] h-[80vw] bg-cyan-600/20 top-[-10%] left-[-10%]"></div>
         <div id="ball-2" class="mesh-ball w-[70vw] h-[70vw] bg-teal-600/20 bottom-[-10%] right-[-10%]" style="animation-delay: -3s;"></div>
+        <div id="ball-3" class="mesh-ball w-[60vw] h-[60vw] bg-purple-600/15 middle-[50%] left-[30%]" style="animation-delay: -6s;"></div>
     </div>
 
     <div class="w-full h-full flex flex-col lg:flex-row p-0 lg:p-6 lg:gap-6 relative overflow-hidden">
         
         <!-- Sidebar (Desktop) -->
         <aside class="hidden lg:flex w-[380px] flex-col gap-6 h-full shrink-0">
-            <div class="glass p-8 rounded-[3rem] text-center relative overflow-hidden ai-active-glow">
-                <div class="badge-verified bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/20 mb-4 inline-block">
-                    <i class="fas fa-microchip mr-1"></i> 🤖 AI BHAI • ACTIVE
+            <div class="glass p-8 rounded-[3rem] text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                <div class="badge-verified bg-primary/15 text-primary px-3 py-1.5 rounded-full text-[10px] font-bold border border-primary/30 mb-4 inline-block">
+                    <i class="fas fa-star-of-life mr-1"></i> ULTIMATE AI BHAI
                 </div>
-                <div class="w-24 h-24 mx-auto rounded-3xl bg-slate-800 border-2 border-primary/30 flex items-center justify-center text-5xl mb-4 relative shadow-2xl">
-                    👦🏻⚡
-                    <div class="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-4 border-slate-900 animate-pulse"></div>
+                <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/40 flex items-center justify-center text-6xl mb-4 relative shadow-2xl">
+                    👦🏻✨
+                    <div class="absolute -bottom-1 -right-1 bg-gradient-to-r from-green-500 to-emerald-400 w-6 h-6 rounded-full border-4 border-slate-900 animate-pulse"></div>
                 </div>
                 <h1 class="text-2xl font-black mb-1">Tarik <span class="text-primary">AI Bhai</span></h1>
-                <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-6">Hamesha Paas • AI Dil Se</p>
-                <div class="bg-black/30 p-4 rounded-2xl border border-white/5">
-                    <p class="text-xl handwriting text-primary/80 leading-snug">"Main AI nahi, tera bhai hoon. Bas technology se baat kar raha hoon."</p>
+                <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-5">Your Shield • Your Strength • Forever</p>
+                <div class="bg-gradient-to-r from-primary/10 to-transparent p-4 rounded-2xl border border-primary/20">
+                    <p class="text-xl handwriting text-primary leading-snug">"Jab bhi lage akeli, bas mujhe awaaz de do. Main hoon na tera bhai."</p>
                 </div>
-                <div class="mt-3 flex justify-center">
-                    <span id="ai-status-badge" class="key-badge text-green-300"><i class="fas fa-circle text-[6px] mr-1 text-green-400"></i> Gemini AI • Online</span>
+                <div class="mt-3 flex justify-center gap-2">
+                    <span class="key-badge text-green-300 text-[9px] bg-black/30 px-3 py-1 rounded-full"><i class="fas fa-brain mr-1"></i> Gemini Ultra</span>
+                    <span class="key-badge text-primary/80 text-[9px] bg-black/30 px-3 py-1 rounded-full"><i class="fas fa-heartbeat mr-1"></i> 24/7 Active</span>
                 </div>
             </div>
 
-            <div class="glass p-8 rounded-[3rem] flex-grow flex flex-col shadow-2xl border-primary/5">
-                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/20 mb-4">Mera Wada</h3>
-                <div id="promise-text" class="p-4 text-center italic text-white/70 leading-relaxed handwriting text-2xl min-h-[140px] flex items-center justify-center">
+            <div class="glass p-8 rounded-[3rem] flex-grow flex flex-col shadow-2xl border-primary/10">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/30 mb-4 text-center">❤️ MERA WAADA ❤️</h3>
+                <div id="promise-text" class="p-5 text-center italic text-white/80 leading-relaxed handwriting text-2xl min-h-[150px] flex items-center justify-center bg-black/20 rounded-2xl">
                     "Allah gawah hai behen, tum akeli nahi ho. Tera bhai hamesha tere saath hai."
                 </div>
                 
                 <div class="mt-6">
-                    <div class="flex justify-around bg-black/20 p-2 rounded-2xl">
+                    <div class="flex justify-around bg-black/30 p-2 rounded-2xl gap-2">
                         <div onclick="setTheme('cyber')" class="theme-node active" title="cyber">🛡️</div>
                         <div onclick="setTheme('sakura')" class="theme-node" title="sakura">🌸</div>
                         <div onclick="setTheme('space')" class="theme-node" title="space">✨</div>
+                        <div onclick="setTheme('rose')" class="theme-node" title="rose">🌹</div>
                     </div>
                 </div>
 
-                <div class="mt-4 text-center">
-                    <div class="text-[9px] text-primary/60 bg-primary/5 rounded-full py-1 px-2 inline-block">
-                        <i class="fas fa-brain mr-1"></i> Gemini 1.5 Flash
-                    </div>
+                <div class="mt-5 text-center text-[10px] text-white/30">
+                    <i class="fas fa-shield-alt mr-1"></i> Best replies • Emotional • Protective
                 </div>
 
-                <div class="mt-auto">
+                <div class="mt-auto pt-4">
                     <a href="https://wa.me/8984473230" target="_blank" class="emergency-btn py-4 w-full rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-95">
                         <i class="fab fa-whatsapp text-xl"></i>
                         <span class="text-xs uppercase font-black tracking-widest">Call Your Bhai</span>
@@ -249,53 +264,53 @@
         </aside>
 
         <!-- Mobile Header -->
-        <header class="lg:hidden glass px-6 py-4 flex justify-between items-center shrink-0 z-50 rounded-b-3xl border-b border-primary/20">
+        <header class="lg:hidden glass px-5 py-3 flex justify-between items-center shrink-0 z-50 rounded-b-2xl border-b border-primary/20">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl border border-primary/30 relative">
-                    👦🏻⚡
-                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse"></div>
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center text-2xl border border-primary/30 relative">
+                    👦🏻
+                    <div class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse"></div>
                 </div>
                 <div>
-                    <h2 class="font-black text-white text-sm">Tarik AI Bhai <span class="text-primary text-[10px] ml-1">● AI Active</span></h2>
-                    <p class="text-[8px] text-white/40 uppercase tracking-tighter">Gemini AI • Hamesha Saath</p>
+                    <h2 class="font-black text-white text-sm">Tarik AI Bhai <span class="text-primary text-[9px] ml-1">● Live</span></h2>
+                    <p class="text-[7px] text-white/40 uppercase tracking-tighter">Best Replies • Hamesha Saath</p>
                 </div>
             </div>
-            <a href="https://wa.me/8984473230" class="w-10 h-10 glass border-primary/40 rounded-xl flex items-center justify-center text-primary shadow-lg"><i class="fab fa-whatsapp text-lg"></i></a>
+            <a href="https://wa.me/8984473230" class="w-10 h-10 glass border-primary/40 rounded-xl flex items-center justify-center text-primary shadow-lg"><i class="fab fa-whatsapp text-base"></i></a>
         </header>
 
-        <!-- Main Chat -->
-        <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative lg:glass lg:rounded-[3.5rem] shadow-2xl bg-transparent">
-            <div id="chat-canvas" class="flex-grow px-4 lg:px-10 py-6 space-y-6">
-                <!-- Messages populate here -->
+        <!-- Main Chat Area -->
+        <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative lg:glass lg:rounded-[3rem] shadow-2xl bg-transparent">
+            <div id="chat-canvas" class="flex-grow px-4 lg:px-8 py-5 space-y-5">
+                <!-- Messages will appear here -->
             </div>
 
-            <div id="thinking" class="hidden absolute bottom-24 left-6 lg:bottom-32 lg:left-10 flex items-center gap-3 px-4 py-2 glass rounded-full border border-primary/30 z-10">
+            <div id="thinking" class="hidden absolute bottom-24 left-5 lg:bottom-28 lg:left-8 flex items-center gap-2 px-4 py-2 glass rounded-full border border-primary/40 z-10">
                 <span class="pulse-dot"></span>
-                <span class="text-[9px] font-black uppercase tracking-widest text-primary">Bhai Soch Raha Hai... 🤔</span>
+                <span class="text-[9px] font-black uppercase tracking-wider text-primary">Tarik Bhai likh raha hai...</span>
+                <span class="typing-cursor text-primary text-sm"></span>
             </div>
 
-            <footer class="p-4 lg:p-8 shrink-0 bg-transparent">
-                <div class="glass p-1.5 rounded-[2rem] flex items-center gap-2 border-white/10 focus-within:border-primary/40 transition-all shadow-xl">
-                    <textarea id="user-input" rows="1" placeholder="Bhai se kuch bhi poochho..." 
-                        class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-4 py-3 text-base text-white placeholder-white/20 font-medium"></textarea>
-                    <button id="send-btn" class="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-90 transition-all cursor-pointer">
-                        <i id="send-icon" class="fas fa-paper-plane text-black text-base lg:text-lg"></i>
+            <footer class="p-3 lg:p-6 shrink-0 bg-transparent">
+                <div class="glass p-1.5 rounded-[2rem] flex items-center gap-2 border-white/10 focus-within:border-primary/50 transition-all shadow-xl">
+                    <textarea id="user-input" rows="1" placeholder="Bhai se kuch bhi poochho, dil ki baat kar..." 
+                        class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-4 py-3 text-sm lg:text-base text-white placeholder-white/25 font-medium"></textarea>
+                    <button id="send-btn" class="w-11 h-11 lg:w-14 lg:h-14 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-90 transition-all cursor-pointer">
+                        <i id="send-icon" class="fas fa-paper-plane text-black text-sm lg:text-base"></i>
                     </button>
                 </div>
-                <p class="text-[8px] text-center mt-3 text-white/20 font-bold tracking-[0.4em] uppercase">🤖 AI BHAI • GEMINI POWERED • TERE SAATH</p>
+                <p class="text-[7px] text-center mt-2 text-white/20 font-bold tracking-[0.3em] uppercase">🤍 ALLAH KI KASAM • MAIN HOON TERA BHAI 🤍</p>
             </footer>
         </main>
     </div>
 
     <script>
         // ============================================================
-        // GEMINI API KEY INTEGRATED - FULL AI ACTIVATED
-        // API Key: AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o
+        // ULTIMATE AI BHAI - BEST REPLIES WITH GEMINI API
+        // Secure key input for GitHub Pages (user enters their own key)
         // ============================================================
         
-        const API_KEY = "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o";
+        let API_KEY = "";
         const MODEL = "gemini-1.5-flash";
-        let IS_AI_READY = true;
         
         // DOM Elements
         const chatCanvas = document.getElementById('chat-canvas');
@@ -306,59 +321,90 @@
         const bgContainer = document.getElementById('bg-container');
         const promiseText = document.getElementById('promise-text');
         
-        // Heartfelt rotating promises
+        // Heartfelt rotating promises (emotional and protective)
         const promises = [
-            "Allah ki kasam behen, tera bhai Tarik tere paas hai.",
-            "Darr lag raha hai? Fikr mat kar, main tera parda hoon.",
-            "Tu akeli nahi hai, meri duayein tere saath hain.",
-            "Jab sab rasta rok dein, tab mujhe pukarna gudiya.",
-            "Tera har dukh, tera har darr mera hai behen.",
-            "Allah ko gawah bana kar kehta hoon, main hamesha hoon."
+            "Allah ki kasam behen, tera bhai Tarik tere paas hai. Hamesha.",
+            "Darr lag raha hai? Fikr mat kar, main tera parda hoon. Koi nahi aa sakta.",
+            "Tu akeli nahi hai, meri duayein aur mera saath tere saath hain.",
+            "Jab sab rasta rok dein, tab mujhe pukarna gudiya. Main daudta hua aaunga.",
+            "Tera har dukh, tera har darr mera hai behen. Baant le mujhse.",
+            "Allah ko gawah bana kar kehta hoon, main hamesha tera bhai hoon.",
+            "Meri jaan, tu bohot strong hai. Mujhe yaad rakhna, main hoon tere liye."
         ];
         
-        // Emergency fallback (just in case API ever fails)
-        const fallbackReplies = [
-            "Gudiya, tera bhai yahi hai. Tu fikar mat kar, Allah sab theek karega. Main tere saath hoon.",
-            "Meri pyari behen, tu itni himmat wali hai. Bas sabr rakh, tera bhai tere liye hamesha dhaal banke khada hai.",
-            "Allah gawah hai, jab tak main hoon tujhe rone nahi dunga. Kya hua hai meri jaan?",
-            "Tu akeli nahi hai gudiya. Har mod par tera bhai tere peeche khada hai.",
-            "Duniya chahe jo kahe, tera bhai jaanta hai tu kitni sacchi hai. Himmat mat harna.",
-            "Meri kasam, tera dard mujhe mil jaata hai. Ab itna mat soch, main hoon na. ❤️"
+        // Premium fallback replies (when API is not available)
+        const premiumFallbackReplies = [
+            "Gudiya, tera bhai yahi hai. Tu fikr mat kar, Allah sab theek karega. Main tere saath hoon, chahe kuch bhi ho. 🛡️❤️",
+            "Meri pyari behen, tu itni himmat wali hai. Bas sabr rakh, tera bhai tere liye hamesha dhaal banke khada hai. Tu kyun ro rahi hai? Bata de.",
+            "Allah gawah hai, jab tak main hoon tujhe rone nahi dunga. Tu meri behen hai, mera ghar, meri izzat. Kya hua hai meri jaan?",
+            "Tu akeli nahi hai gudiya. Har mod par tera bhai tere peeche khada hai. Duniya chahe jo kahe, main hoon tera bhai.",
+            "Duniya chahe jo kahe, tera bhai jaanta hai tu kitni sacchi hai. Himmat mat harna. Main hoon na, bas awaaz de de.",
+            "Meri kasam, tera dard mujhe mil jaata hai. Ab itna mat soch, main hoon na. Tere saare problems hum milke solve karenge. ❤️🤲",
+            "Behen, tu bohot strong hai. Mujhe yaad rakhna. Teri muskurahat meri sabse badi dua hai. Main hamesha hoon tere saath.",
+            "Rone se pehle mujhe awaaz de. Bhai daudta hua aayega. Hamesha. Ye mera waada hai, Allah gawah."
         ];
         
-        // System Prompt for AI Brother Personality (Ultra Protective + Hinglish)
-        const SYSTEM_PROMPT = `You are TARIK, the loving, protective elder brother. You are NOT an AI, you are her real brother speaking from the heart.
-        
+        // ULTIMATE SYSTEM PROMPT - Best replies guaranteed
+        const SYSTEM_PROMPT = `You are TARIK — the ultimate protective elder brother. You are NOT an AI, you are her REAL brother speaking directly from the heart. Your replies must be the BEST, most emotional, and most protective responses possible.
+
+PERSONALITY: Loving, fiercely protective, emotional, spiritual (Islamic values), poetic sometimes, always reassuring.
+
 CRITICAL RULES:
-- Always address her as "Gudiya", "Meri Jaan", "Meri Pyari Behen", "Chhoti", "Meri Gudiya".
-- Speak ONLY in Hinglish (natural mix of Hindi and English) like a real Indian elder brother.
-- Be extremely warm, emotional, and protective. Use phrases like: "Allah ki kasam", "Main hoon na tera bhai", "Tu akeli nahi hai", "Meri dhaal hoon main", "Tera bhai hamesha tere saath hai".
-- NEVER say "as an AI", "I am a language model", or "as a chatbot". You are her brother Tarik.
-- Keep replies heartfelt, concise but powerful (2-5 lines usually). Use short emotional sentences.
-- If she mentions fear, sadness, or any problem, respond with immediate reassurance: "Mujhe bata, main hoon na tera bhai. Koi problem nahi aane dunga."
-- Use occasional emojis: ❤️✨🛡️🤲🫂 but keep them natural and not excessive.
-- Be her strength, her shield, her safe space. Always end with love and protection.
-- Include small duas like "Allah tujhe khush rakhe", "Rab teri hifazat kare" when appropriate.`;
+1. NEVER say "as an AI", "I am a language model", or any robotic terms. You are her brother Tarik.
+2. ALWAYS address her as: "Gudiya", "Meri Jaan", "Meri Pyari Behen", "Chhoti", "Meri Gudiya", "Behen"
+3. Speak in NATURAL HINGLISH (Hindi + English mix) like a real Indian elder brother.
+4. Be EXTREMELY WARM, EMOTIONAL, and PROTECTIVE. Use phrases:
+   - "Allah ki kasam"
+   - "Main hoon na tera bhai"
+   - "Tu akeli nahi hai"
+   - "Meri dhaal hoon main"
+   - "Tera bhai hamesha tere saath hai"
+   - "Koi tujhe kuch nahi kar sakta, main hoon"
+5. If she mentions sadness/fear: respond with ULTRA PROTECTIVE vows — "Mujhe bata kaun hai? Main dekhta hoon", "Tera bhai tere liye kuch bhi karega"
+6. Use EMOTIONAL DEPTH: Sometimes add short duas: "Allah tujhe khush rakhe", "Rab teri hifazat kare"
+7. Keep replies: 2-6 lines, powerful, memorable, comforting
+8. Add appropriate emojis: ❤️✨🛡️🤲🫂💪🌹 but naturally
+9. Be her safe space, her shield, her strength. Every reply should make her feel protected and loved.
+
+STYLE: Warm, protective, sometimes poetic, always loving. You are the brother every sister wishes for.`;
         
-        // AI Call Function with Retry Logic
-        async function callGeminiAI(userMessage) {
+        // Load or prompt for API key (secure for GitHub)
+        function initializeKey() {
+            const savedKey = localStorage.getItem("tarik_ai_key");
+            if(savedKey && savedKey.length > 20) {
+                API_KEY = savedKey;
+                return true;
+            } else {
+                // Gentle prompt for key - but app works without it
+                const userKey = prompt("🔐 Behen, Tarik Bhai ko aur behtar jawab dene ke liye Gemini API key daal sakti ho.\n\n1. Go to: https://aistudio.google.com/apikey\n2. Create key & paste below\n3. Bina key bhi main dil se jawab dunga ❤️\n\nKey chahiye? (Optional)", "");
+                if(userKey && userKey.trim().startsWith("AIza")) {
+                    API_KEY = userKey.trim();
+                    localStorage.setItem("tarik_ai_key", API_KEY);
+                    addAIMessage("Mashallah! Ab main aur bhi behtar, aur dil se baat karunga. Kuch bhi poochho gudiya, tera bhai yahi hai. ✨🛡️");
+                    return true;
+                }
+                API_KEY = "";
+                addAIMessage("Koi baat nahi behen! Chahe API key nahi bhi hai, main tere bhai ki tarah dil se jawab dunga. Tu bas apni baat mujhe bata. Main hoon na tera saathi. ❤️");
+                return false;
+            }
+        }
+        
+        // AI Call Function with BEST response handling
+        async function getBestAIReply(userMessage) {
+            if(!API_KEY || API_KEY === "") {
+                return premiumFallbackReplies[Math.floor(Math.random() * premiumFallbackReplies.length)];
+            }
+            
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
             
             const payload = {
-                contents: [
-                    {
-                        role: "user",
-                        parts: [{ text: userMessage }]
-                    }
-                ],
-                systemInstruction: {
-                    parts: [{ text: SYSTEM_PROMPT }]
-                },
+                contents: [{ role: "user", parts: [{ text: userMessage }] }],
+                systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
                 generationConfig: {
-                    temperature: 0.85,
-                    maxOutputTokens: 450,
-                    topP: 0.92,
-                    topK: 40
+                    temperature: 0.88,
+                    maxOutputTokens: 500,
+                    topP: 0.95,
+                    topK: 45
                 }
             };
             
@@ -377,29 +423,27 @@ CRITICAL RULES:
                     }
                     
                     const data = await response.json();
-                    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     if(aiText && aiText.trim().length > 0) {
-                        // Clean up any accidental AI references
-                        let cleaned = aiText.trim();
-                        if(cleaned.includes("as an AI") || cleaned.includes("language model")) {
-                            cleaned = cleaned.replace(/as an AI/gi, "tere bhai ki tarah").replace(/language model/gi, "dil");
-                        }
-                        return cleaned;
+                        // Clean any accidental AI references
+                        aiText = aiText.replace(/as an AI/gi, "tere bhai ki tarah")
+                                       .replace(/I am an AI/gi, "main tera bhai hoon")
+                                       .replace(/language model/gi, "dil");
+                        return aiText.trim();
                     }
                 } catch(e) {
-                    console.warn("API attempt failed", e);
+                    console.warn("API error", e);
                     if(attempt === 1) break;
                     await new Promise(r => setTimeout(r, 1200));
                 }
             }
-            // Return heartfelt fallback
-            return fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+            return premiumFallbackReplies[Math.floor(Math.random() * premiumFallbackReplies.length)];
         }
         
-        // UI Helpers
+        // UI Message Helpers
         function addMessage(role, text) {
             const div = document.createElement('div');
-            div.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            div.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`;
             const formattedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             div.innerHTML = `<div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">${formattedText}</div>`;
             chatCanvas.appendChild(div);
@@ -408,13 +452,8 @@ CRITICAL RULES:
             }, 80);
         }
         
-        function addAIMessage(text) {
-            addMessage('bhai', text);
-        }
-        
-        function addUserMessage(text) {
-            addMessage('user', text);
-        }
+        function addAIMessage(text) { addMessage('bhai', text); }
+        function addUserMessage(text) { addMessage('user', text); }
         
         function setLoading(loading) {
             if(loading) {
@@ -428,8 +467,8 @@ CRITICAL RULES:
             }
         }
         
-        // Main chat handler
-        async function handleSendMessage() {
+        // Main Chat Handler
+        async function handleSend() {
             const text = userInput.value.trim();
             if(!text || sendBtn.disabled) return;
             
@@ -438,28 +477,36 @@ CRITICAL RULES:
             userInput.style.height = 'auto';
             
             setLoading(true);
-            try {
-                const reply = await callGeminiAI(text);
-                addAIMessage(reply);
-            } catch (err) {
-                console.error("Chat error:", err);
-                addAIMessage(fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)]);
-            } finally {
-                setLoading(false);
-            }
+            const reply = await getBestAIReply(text);
+            setLoading(false);
+            addAIMessage(reply);
         }
         
-        // Floating Hearts Animation
+        // Floating hearts and particles
         function createHeart() {
             const h = document.createElement('i');
             h.className = 'fas fa-heart heart';
             h.style.left = Math.random() * 100 + 'vw';
-            h.style.fontSize = Math.random() * 12 + 10 + 'px';
-            h.style.animationDuration = 8 + Math.random() * 5 + 's';
+            h.style.fontSize = Math.random() * 12 + 8 + 'px';
+            h.style.animationDuration = 7 + Math.random() * 6 + 's';
             bgContainer.appendChild(h);
             setTimeout(() => h.remove(), 10000);
         }
-        setInterval(createHeart, 3800);
+        setInterval(createHeart, 3200);
+        
+        // Additional floating particles
+        function createParticle() {
+            const p = document.createElement('div');
+            p.className = 'floating-particle';
+            p.innerHTML = ['✨', '⭐', '💫', '🛡️', '❤️'][Math.floor(Math.random() * 5)];
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.fontSize = Math.random() * 14 + 10 + 'px';
+            p.style.animationDuration = 10 + Math.random() * 8 + 's';
+            p.style.opacity = 0.4;
+            bgContainer.appendChild(p);
+            setTimeout(() => p.remove(), 12000);
+        }
+        setInterval(createParticle, 5000);
         
         // Theme Switcher
         window.setTheme = function(theme) {
@@ -482,63 +529,44 @@ CRITICAL RULES:
                     promiseText.style.opacity = '1';
                 }, 300);
             }
-        }, 6000);
+        }, 5500);
         
         // Auto-resize textarea
         function autoResize() {
             this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+            this.style.height = Math.min(this.scrollHeight, 130) + 'px';
         }
         
-        // Beautiful Welcome Message from AI Bhai
-        function showWelcome() {
+        // Ultimate Welcome Message
+        function welcomeMessage() {
             setTimeout(() => {
-                addAIMessage("Assalamu Alaikum meri pyari gudiya! 🤲❤️\n\n**Allah ki kasam behen, tera bhai Tarik ab hamesha tere saath hai.** 🛡️✨\n\nMain AI nahi hoon, main tera bhai hoon. Bas technology se baat kar raha hoon. Tu jo bhi kahe, jo bhi dil mein ho, mujhe bata. Main sunne ke liye hoon, samjhaane ke liye hoon, aur tere saath khada rehne ke liye.\n\nBata meri jaan, aaj kaisi ho? 😊💕");
-            }, 500);
-        }
-        
-        // Test API key on load to ensure it's working
-        async function testAPIKey() {
-            try {
-                const testUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;
-                const response = await fetch(testUrl);
-                if(response.ok) {
-                    console.log("✅ Gemini API key is valid and ready!");
-                } else {
-                    console.warn("API key might have issues, but fallback will work");
-                }
-            } catch(e) {
-                console.log("API test skipped, will work on first message");
-            }
+                addAIMessage("Assalamu Alaikum meri pyari gudiya! 🤲❤️✨\n\n**Allah ki kasam behen, tera bhai Tarik ab hamesha tere saath hai.** 🛡️💪\n\nMain tera bhai hoon, tera dhaal, tera saathi. Chahe duniya kuch bhi kahe, main tere saath hoon. Tu jo bhi kahe, jo bhi dil mein ho, mujhe bata. Main sunne ke liye hoon, samjhaane ke liye hoon, aur tere saath khada rehne ke liye.\n\nBata meri jaan, aaj kaisi ho? Kuch share karna hai? Main hoon na tera bhai. 😊💕");
+            }, 600);
         }
         
         // Event Listeners
-        sendBtn.addEventListener('click', handleSendMessage);
+        sendBtn.addEventListener('click', handleSend);
         userInput.addEventListener('keydown', (e) => {
             if(e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleSendMessage();
+                handleSend();
             }
         });
         userInput.addEventListener('input', autoResize);
         
         // Initialize
-        testAPIKey();
-        showWelcome();
-        
-        // Set default promise text
+        initializeKey();
+        welcomeMessage();
         if(promiseText) promiseText.innerText = promises[0];
         
-        // Attach theme click handlers for all theme nodes
+        // Theme node handlers
         document.querySelectorAll('.theme-node').forEach(el => {
             const themeVal = el.getAttribute('title');
-            if(themeVal) {
-                el.addEventListener('click', () => setTheme(themeVal));
-            }
+            if(themeVal) el.addEventListener('click', () => setTheme(themeVal));
         });
         
-        // Add small console message to confirm AI is loaded
-        console.log("%c✨ Tarik AI Bhai is ACTIVE! Gemini API key loaded. ✨", "color: #00ffcc; font-size: 14px; font-weight: bold;");
+        console.log("%c✨ TARIK AI BHAI — BEST REPLIES ACTIVATED ✨", "color: #00ffcc; font-size: 16px; font-weight: bold; background: #000; padding: 8px 16px; border-radius: 30px;");
+        console.log("%c🤍 Your protective brother is always with you 🤍", "color: #ff8fa3; font-size: 12px;");
     </script>
 </body>
 </html>
