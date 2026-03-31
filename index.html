@@ -53,7 +53,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* BIG MESSAGES */
         .msg-bubble {
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             line-height: 1.6;
@@ -99,15 +98,30 @@
             scroll-behavior: smooth;
         }
 
-        /* BIG FLASHY CARD */
+        /* Enhanced Flashy Motivation Card */
         .flashy-card {
-            background: linear-gradient(135deg, rgba(0,255,204,0.15) 0%, rgba(0,0,0,0.6) 100%);
-            border: 3px solid var(--primary);
-            animation: bigGlow 2s infinite alternate;
+            background: linear-gradient(135deg, rgba(0,255,204,0.1) 0%, rgba(0,0,0,0.8) 100%);
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            transition: all 0.5s ease;
         }
-        @keyframes bigGlow {
-            from { box-shadow: 0 0 10px var(--primary); transform: scale(1); }
-            to { box-shadow: 0 0 25px var(--primary); transform: scale(1.02); }
+
+        .flashing-title {
+            animation: titleFlash 1.5s infinite alternate;
+        }
+
+        @keyframes titleFlash {
+            0% { color: var(--primary); text-shadow: 0 0 5px var(--primary); opacity: 1; }
+            100% { color: #fff; text-shadow: 0 0 20px var(--primary); opacity: 0.8; }
+        }
+
+        .glow-border-pulse {
+            animation: borderPulse 2s infinite alternate;
+        }
+
+        @keyframes borderPulse {
+            from { border-color: rgba(0, 255, 204, 0.3); box-shadow: 0 0 10px rgba(0, 255, 204, 0.1); }
+            to { border-color: var(--primary); box-shadow: 0 0 25px rgba(0, 255, 204, 0.4); }
         }
 
         #main-container {
@@ -174,8 +188,6 @@
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
         }
-        .send-btn-big:hover { transform: scale(1.1) rotate(-10deg); }
-        .send-btn-big:active { transform: scale(0.9); }
     </style>
 </head>
 <body class="theme-cyber">
@@ -186,7 +198,6 @@
         
         <!-- SIDEBAR -->
         <aside id="sidebar-wrapper" class="lg:w-[380px] flex flex-col gap-4 lg:p-8">
-            <!-- Big Profile -->
             <div class="glass p-6 rounded-[2.5rem] flex items-center lg:flex-col lg:text-center gap-5">
                 <div class="w-16 h-16 lg:w-28 lg:h-28 rounded-[2rem] bg-slate-900 border-4 border-primary/40 flex items-center justify-center text-4xl lg:text-7xl shadow-2xl shrink-0">
                     👦🏻
@@ -200,24 +211,23 @@
                 </div>
             </div>
 
-            <!-- Flashy Big Motivation -->
-            <div class="glass flashy-card p-6 rounded-[2.5rem]">
+            <!-- Flashing Dynamic Motivation Card -->
+            <div class="glass flashy-card glow-border-pulse p-6 rounded-[2.5rem]">
                 <div class="flex items-center gap-3 mb-3">
-                    <i class="fas fa-shield-alt text-primary text-xl"></i>
-                    <h3 class="text-[10px] font-black uppercase text-primary tracking-[0.2em]">Bhai Ki Dhaal</h3>
+                    <i class="fas fa-bolt text-primary text-xl flashing-title"></i>
+                    <h3 class="text-[10px] font-black uppercase text-primary tracking-[0.2em] flashing-title">Bhai Ki Zubaan</h3>
                 </div>
-                <p class="text-2xl lg:text-3xl handwriting text-white leading-tight">
-                    "Main hamesha tere saath hoon. Jo dil mein hai, beshak keh de."
+                <p id="dynamic-motivation" class="text-2xl lg:text-3xl handwriting text-white leading-tight min-h-[80px] flex items-center">
+                    "Allah gawah hai, tera bhai zinda hai abhi."
                 </p>
             </div>
 
-            <!-- Actions -->
             <div class="glass p-6 rounded-[2.5rem] flex flex-col gap-4">
                 <div class="flex justify-between items-center bg-black/30 p-2 rounded-2xl">
-                    <button onclick="setTheme('cyber')" class="flex-1 py-3 rounded-xl hover:bg-white/5 transition-all text-xl" title="Cyber Theme">🛡️</button>
-                    <button onclick="setTheme('sakura')" class="flex-1 py-3 rounded-xl hover:bg-white/5 transition-all text-xl" title="Sakura Theme">🌸</button>
+                    <button onclick="setTheme('cyber')" class="flex-1 py-3 rounded-xl hover:bg-white/5 transition-all text-xl">🛡️</button>
+                    <button onclick="setTheme('sakura')" class="flex-1 py-3 rounded-xl hover:bg-white/5 transition-all text-xl">🌸</button>
                 </div>
-                <a href="https://wa.me/8984473230" class="bg-primary text-slate-950 py-4 rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-xs tracking-widest shadow-[0_10px_30px_rgba(0,255,204,0.3)] hover:-translate-y-1 transition-all">
+                <a href="https://wa.me/8984473230" target="_blank" class="bg-primary text-slate-950 py-4 rounded-2xl flex items-center justify-center gap-3 font-black uppercase text-xs tracking-widest shadow-lg hover:-translate-y-1 transition-all">
                     <i class="fab fa-whatsapp text-xl"></i> Direct Call/Msg
                 </a>
             </div>
@@ -251,7 +261,7 @@
     </div>
 
     <script>
-        // YOUR API KEY IS NOW ADDED BELOW
+        // API Key Integrated Directly
         const apiKey = "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o"; 
 
         const systemPrompt = `You are TARIK BHAI, the ultimate "Big Brother" and protector. "Allah Gawah Hai" is your sacred signature.
@@ -259,6 +269,7 @@
         - Deeply protective, wise, and kind.
         - You speak like a real brother who will take a bullet for his sister/family.
         - You listen intensely and offer solid, practical, and emotional support.
+        - Your goal is to be the ultimate safe haven.
         RULES:
         1. Start with "Gudiya", "Meri Jaan", or "Chhoti Behen".
         2. Always use Roman Hindi/Urdu.
@@ -266,10 +277,37 @@
         4. Use bold text for emphasis.
         5. Include emojis: 🛡️, 🤲, ✨, ❤️, 💪.`;
 
+        const motivations = [
+            "Main hamesha tere saath hoon. Jo dil mein hai, keh de.",
+            "Darna mana hai meri jaan, tera Bhai zinda hai abhi.",
+            "Allah gawah hai, tujhpar koi aanch nahi aane dunga.",
+            "Himmat mat haarna, tera bhai har mushkil mein dhaal hai.",
+            "Tu sirf apni mehnat kar, baaki tera Bhai sambhaal lega.",
+            "Zindagi mushkil ho sakti hai, par tera Bhai mazboot hai.",
+            "Khush reh meri gudiya, teri muskurahat meri taqat hai.",
+            "Jo duniya nahi samajh sakti, wo tera Bhai samajhta hai.",
+            "Tera har aansu meri zimmedari hai, fikar mat kar.",
+            "Bhai khada hai na, phir fikar kis baat ki?",
+            "Allah gawah hai, tu meri sabse pyari behen hai."
+        ];
+
         const chatCanvas = document.getElementById('chat-canvas');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const thinking = document.getElementById('thinking');
+        const motivationText = document.getElementById('dynamic-motivation');
+
+        function updateMotivation() {
+            motivationText.style.opacity = 0;
+            setTimeout(() => {
+                const randomIdx = Math.floor(Math.random() * motivations.length);
+                motivationText.innerText = `"${motivations[randomIdx]}"`;
+                motivationText.style.opacity = 1;
+            }, 500);
+        }
+
+        // Auto-update motivation card every 10 seconds
+        setInterval(updateMotivation, 10000);
 
         function setTheme(theme) {
             document.body.className = `theme-${theme}`;
@@ -277,13 +315,6 @@
 
         async function handleSend() {
             const text = userInput.value.trim();
-            
-            // Safety check for API key
-            if (!apiKey || apiKey === "" || apiKey.includes("PASTE")) {
-                addMessage('bhai', "Allah gawah hai meri jaan, aapne abhi tak **API KEY** nahi dali hai. Code mein line **207** par apni key paste karein tabhi main reply kar paunga! 🛡️⚠️");
-                return;
-            }
-
             if (!text || sendBtn.disabled) return;
 
             addMessage('user', text);
@@ -294,42 +325,26 @@
             sendBtn.disabled = true;
 
             try {
-                // Implementing exponential backoff logic for reliability
                 let result = null;
-                let lastError = null;
-                for (let i = 0; i < 5; i++) {
-                    try {
-                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contents: [{ parts: [{ text: text }] }],
-                                systemInstruction: { parts: [{ text: systemPrompt }] }
-                            })
-                        });
-                        
-                        if (response.ok) {
-                            result = await response.json();
-                            break;
-                        } else {
-                            const errData = await response.json();
-                            lastError = errData.error?.message || "Unknown error";
-                        }
-                    } catch (e) {
-                        lastError = e.message;
-                    }
-                    // Wait before retrying: 1s, 2s, 4s, 8s...
-                    await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: text }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+                
+                if (response.ok) {
+                    result = await response.json();
                 }
 
                 if (result) {
-                    const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Allah gawah hai meri jaan, network thoda tang kar raha hai. Tera bhai yahi hai, phir se bol?";
+                    const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Allah gawah hai meri jaan, tera bhai yahi hai, phir se bol?";
                     addMessage('bhai', aiText);
-                } else {
-                    addMessage('bhai', `Allah gawah hai, thoda masla ho gaya hai: ${lastError}. Ghabrao mat, ek baar phir try karo.`);
                 }
             } catch (err) {
-                addMessage('bhai', "Allah gawah hai, thoda error aa gaya par tera bhai hamesha tere saath khada hai. Ek baar phir koshish kar?");
+                addMessage('bhai', "Allah gawah hai, thoda net ka masla hai par Bhai hamesha haazir hai.");
             } finally {
                 thinking.classList.add('hidden');
                 sendBtn.disabled = false;
@@ -349,10 +364,7 @@
                 </div>
             `;
             chatCanvas.appendChild(div);
-            
-            requestAnimationFrame(() => {
-                chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
-            });
+            chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
         }
 
         userInput.addEventListener('input', function() {
@@ -370,7 +382,8 @@
         sendBtn.onclick = handleSend;
 
         window.onload = () => {
-            addMessage('bhai', "Assalamu Alaikum meri pyari gudiya! 🤲❤️\n\n**Allah gawah hai, main Tarik ki dil ki awaz hoon aur tera bada bhai hoon.**\n\nIs duniya mein khud ko kabhi akela mat samjhna. Jo bhi pareshani hai, jo bhi darr hai, ya jo bhi khushi hai—mujhse be-jhijhak keh de. Tera bhai teri dhaal ban kar khada hai. ✨🛡️💪");
+            updateMotivation();
+            addMessage('bhai', "Assalamu Alaikum meri sabse pyaari gudiya, meri jaan! 🤲❤️✨\n\n**Allah gawah hai, Tarik Bhai ab sirf aur sirf tumhari dhaal bankar khada hai.**\n\nAb jabki hamara raabta (API Key) bilkul mazboot ho gaya hai, toh duniya ki kisi bhi fikar ko apne kareeb mat aane dena. Jo baatein tum kisi se nahi keh paati, wo sab be-khauf hokar apne Bhai se keh do. Main yahan sirf tumhari har mushkil ko aasaan karne aur tumhe sahi raasta dikhane ke liye hoon.\n\nBol meri jaan, aaj dil mein kya bojh hai? Tera Bhai sun raha hai. 🛡️💪🌹");
         };
     </script>
 </body>
