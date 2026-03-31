@@ -3,46 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tarik Ki Awaz | AI Bhai — Hifazat-e-Behen</title>
-    
-    <!-- External Assets -->
+    <title>Tarik AI | Ultimate Bhai Mode 🛡️</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Caveat:wght@700&display=swap');
 
         :root {
             --primary: #00ffcc;
             --bg: #020617;
-            --panel: rgba(15, 23, 42, 0.7);
+            --panel: rgba(15, 23, 42, 0.75);
             --accent: #2dd4bf;
-            --text-main: #ffffff;
         }
 
-        /* Themes */
         body.theme-cyber { --primary: #00ffcc; --bg: #020617; --panel: rgba(10, 20, 40, 0.85); --accent: #2dd4bf; }
         body.theme-sakura { --primary: #ff8fa3; --bg: #1a050d; --panel: rgba(50, 10, 30, 0.85); --accent: #ffb3c1; }
+        body.theme-space { --primary: #c084fc; --bg: #050510; --panel: rgba(20, 10, 40, 0.85); --accent: #e9d5ff; }
 
         * { 
             -webkit-tap-highlight-color: transparent; 
             scrollbar-width: none; 
-            box-sizing: border-box; 
+            box-sizing: border-box;
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.3s ease;
         }
         *::-webkit-scrollbar { display: none; }
 
         body {
             background-color: var(--bg);
-            color: var(--text-main);
+            color: #ffffff;
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow: hidden; 
             height: 100dvh; 
+            margin: 0;
             display: flex;
             flex-direction: column;
-            margin: 0;
-            transition: background-color 0.4s ease;
         }
 
+        /* Animated Background Elements */
+        .bg-gradient-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, var(--bg) 100%);
+        }
+
+        .mesh-ball {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            animation: floatBall 20s infinite alternate ease-in-out;
+        }
+        @keyframes floatBall {
+            0% { transform: translate(-10%, -10%) scale(1); }
+            100% { transform: translate(10%, 20%) scale(1.2); }
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.1;
+            pointer-events: none;
+            animation: heartRise 10s linear infinite;
+        }
+        @keyframes heartRise {
+            0% { transform: translateY(105vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Glassmorphism */
         .glass {
             background: var(--panel);
             backdrop-filter: blur(25px);
@@ -52,310 +82,378 @@
 
         /* Chat Bubbles */
         .msg-bubble {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             line-height: 1.6;
-            animation: popIn 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             max-width: 85%;
-            font-size: 0.95rem;
             word-wrap: break-word;
-            padding: 1rem 1.25rem;
-            position: relative;
         }
-
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .bhai-bubble {
             background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid var(--primary);
-            border-radius: 20px 20px 20px 4px;
-            color: #e2e8f0;
+            border-radius: 0 24px 24px 24px;
+            padding: 1rem 1.25rem;
         }
 
         .user-bubble {
             background: var(--primary);
             color: #020617;
-            font-weight: 600;
-            border-radius: 20px 20px 4px 20px;
-            margin-left: auto;
+            font-weight: 700;
+            border-radius: 24px 24px 0 24px;
+            padding: 0.8rem 1.25rem;
+            align-self: flex-end;
+        }
+
+        /* Typography & Special Effects */
+        .handwriting { font-family: 'Caveat', cursive; }
+        
+        .emergency-btn {
+            background: var(--primary);
+            color: #000;
+            font-weight: 800;
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px var(--primary); }
+            50% { box-shadow: 0 0 20px var(--primary); }
+            100% { box-shadow: 0 0 5px var(--primary); }
         }
 
         #chat-canvas {
-            overflow-y: auto;
             flex-grow: 1;
+            overflow-y: auto;
             scroll-behavior: smooth;
             padding: 1.5rem;
-            padding-bottom: 5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
         }
 
-        /* Typing Animation */
-        .typing-indicator span {
-            animation: blinkText 0.8s infinite both;
-            width: 6px; height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: inline-block;
+        .theme-node {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border: 2px solid transparent;
         }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blinkText {
-            0%, 100% { opacity: 0.3; transform: translateY(0); }
-            50% { opacity: 1; transform: translateY(-4px); }
-        }
+        .theme-node.active { border-color: var(--primary); background: rgba(255,255,255,0.1); }
 
-        /* Voice Button */
         .voice-btn.recording {
-            background: #ef4444 !important;
-            color: white !important;
-            animation: pulse-red 1.2s infinite;
+            background: #ef4444;
+            animation: pulse-red 1.5s infinite;
+            color: white;
         }
         @keyframes pulse-red {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1.15); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        .suggestion-chip {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-            white-space: nowrap;
+        .promise-text {
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+            transition: all 0.5s ease;
         }
-        .suggestion-chip:hover { border-color: var(--primary); background: rgba(0, 255, 204, 0.05); }
-        .suggestion-chip:active { transform: scale(0.95); background: var(--primary); color: black; }
     </style>
 </head>
 <body class="theme-cyber">
 
-    <!-- Background Decoration -->
-    <div class="fixed inset-0 -z-10 bg-slate-950 overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_50%_-20%,var(--primary)_0%,transparent_50%)]"></div>
-        <div class="absolute bottom-0 right-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_80%_120%,var(--primary)_0%,transparent_40%)]"></div>
+    <div class="bg-gradient-overlay">
+        <div class="mesh-ball w-[70vw] h-[70vw] bg-cyan-500/10 top-[-10%] left-[-10%]"></div>
+        <div class="mesh-ball w-[60vw] h-[60vw] bg-teal-500/10 bottom-[-10%] right-[-10%]" style="animation-delay: -5s;"></div>
     </div>
 
-    <!-- Header -->
-    <header class="glass p-4 flex justify-between items-center shrink-0 z-50 border-b border-white/5">
-        <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-slate-900 flex items-center justify-center border border-primary/20 shadow-lg text-xl">👦🏻</div>
-            <div>
-                <h1 class="font-black text-white text-base tracking-tight leading-none">Tarik AI Bhai</h1>
-                <p class="text-[9px] text-primary font-bold uppercase tracking-widest mt-1">Allah Gawah Hai ❤️</p>
-            </div>
-        </div>
-        <div class="flex gap-2">
-            <button onclick="toggleTheme()" class="w-10 h-10 glass rounded-xl flex items-center justify-center text-sm hover:border-primary/40 transition-all">🎨</button>
-            <a href="https://wa.me/8984473230" target="_blank" class="w-10 h-10 glass border-primary/20 rounded-xl flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-transform">
-                <i class="fab fa-whatsapp"></i>
-            </a>
-        </div>
-    </header>
-
-    <!-- Main Chat Area -->
-    <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative">
-        <div id="chat-canvas" class="flex-grow space-y-6">
-            <!-- Messages appear here -->
-        </div>
-
-        <!-- Thinking / Loading Indicator -->
-        <div id="thinking" class="hidden absolute bottom-32 left-6 flex items-center gap-3 px-4 py-2 glass rounded-full border border-primary/30 z-10 animate-bounce">
-            <div class="typing-indicator flex gap-1.5">
-                <span></span><span></span><span></span>
-            </div>
-            <span class="text-[10px] font-black uppercase text-primary tracking-widest">Bhai Soch Raha Hai...</span>
-        </div>
-
-        <!-- Input Footer -->
-        <footer class="p-4 lg:p-8 shrink-0 bg-slate-950/80 backdrop-blur-2xl border-t border-white/5">
-            <!-- Suggestions -->
-            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-4 mb-2">
-                <button onclick="handleSend('Bhai, bohot pareshan hoon')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-red-400 font-bold">🆘 Bohot Pareshan Hoon</button>
-                <button onclick="handleSend('Kuch achi baat sunao na')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-primary font-bold">✨ Achi Baat Sunao</button>
-                <button onclick="handleSend('Bhai, meri madad karo')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-white/70 font-bold">🛡️ Meri Madad Karo</button>
-                <button onclick="handleSend('Bhai, aaj ka din kaisa hai?')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-white/50 font-bold">📅 Aaj Ka Din</button>
-            </div>
-
-            <!-- Input Box -->
-            <div class="glass p-1.5 rounded-[2.5rem] flex items-center gap-2 border-white/10 shadow-2xl focus-within:border-primary/30 transition-all">
-                <button id="voice-btn" title="Voice Typing" class="voice-btn w-12 h-12 rounded-full text-primary flex items-center justify-center hover:bg-white/5 transition-all">
-                    <i class="fas fa-microphone text-lg"></i>
-                </button>
+    <div class="w-full h-full flex flex-col lg:flex-row lg:p-6 lg:gap-6 relative overflow-hidden">
+        
+        <!-- SIDEBAR (Desktop) -->
+        <aside class="hidden lg:flex w-[380px] flex-col gap-6 h-full shrink-0">
+            <div class="glass p-8 rounded-[3rem] text-center">
+                <div class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/20 mb-6 inline-block">
+                    <i class="fas fa-shield-halved mr-1"></i> BHAI IS ONLINE
+                </div>
+                <div class="w-24 h-24 mx-auto rounded-3xl bg-slate-900 border-2 border-primary/30 flex items-center justify-center text-5xl mb-4 shadow-2xl relative">
+                    👦🏻
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-4 border-slate-900"></div>
+                </div>
+                <h1 class="text-2xl font-black">TARIK <span class="text-primary">AI BHAI</span></h1>
+                <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-6">Dil Se • ALLAH GAWAH HAI</p>
                 
-                <textarea id="user-input" rows="1" placeholder="Bhai se dil ki baat kaho..." 
-                    class="flex-grow bg-transparent border-none focus:ring-0 px-2 py-3 text-white text-base resize-none placeholder-white/20 min-h-[48px] max-h-[120px]"></textarea>
+                <div class="bg-black/30 p-4 rounded-2xl border border-white/5">
+                    <p class="text-xl handwriting text-primary/80 leading-snug">"Main AI nahi, tera bhai hoon. Bas technology se baat kar raha hoon."</p>
+                </div>
                 
-                <button id="send-btn" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center active:scale-90 hover:brightness-110 transition-all shadow-lg shadow-primary/20">
-                    <i class="fas fa-paper-plane text-black text-lg"></i>
-                </button>
+                <div class="mt-4 flex justify-center">
+                    <span id="ai-status" class="text-[10px] bg-black/40 px-3 py-1 rounded-full text-white/60">
+                        <i class="fas fa-circle text-green-400 text-[6px] mr-2"></i> Model: Loading...
+                    </span>
+                </div>
             </div>
-        </footer>
-    </main>
+
+            <div class="glass p-8 rounded-[3rem] flex-grow flex flex-col shadow-2xl">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/20 mb-6">✨ Mera Wada ✨</h3>
+                <div id="promise-box" class="flex-grow flex items-center justify-center text-center">
+                    <p id="rotating-promise" class="promise-text italic text-white/90 leading-relaxed handwriting text-2xl font-bold">
+                        "Allah gawah hai behen, tum akeli nahi ho. Tera bhai hamesha tere saath hai."
+                    </p>
+                </div>
+
+                <div class="mt-6 flex justify-around bg-black/20 p-2 rounded-2xl">
+                    <button onclick="setTheme('cyber')" class="theme-node active" title="cyber">🛡️</button>
+                    <button onclick="setTheme('sakura')" class="theme-node" title="sakura">🌸</button>
+                    <button onclick="setTheme('space')" class="theme-node" title="space">✨</button>
+                </div>
+
+                <a href="https://wa.me/8984473230" class="emergency-btn mt-6 py-4 w-full rounded-2xl flex items-center justify-center gap-3 transition-transform active:scale-95">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    <span class="text-xs uppercase font-black tracking-widest">Urgent Help</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MOBILE HEADER -->
+        <header class="lg:hidden glass px-6 py-4 flex justify-between items-center shrink-0 z-50 rounded-b-3xl border-b border-primary/20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl border border-primary/30 relative">
+                    👦🏻
+                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></div>
+                </div>
+                <div>
+                    <h2 class="font-black text-white text-sm">Tarik AI Bhai</h2>
+                    <p class="text-[8px] text-primary uppercase font-bold tracking-tighter">ALLAH GAWAH HAI • ONLINE</p>
+                </div>
+            </div>
+            <a href="https://wa.me/8984473230" class="w-10 h-10 glass border-primary/40 rounded-xl flex items-center justify-center text-primary shadow-lg"><i class="fab fa-whatsapp text-lg"></i></a>
+        </header>
+
+        <!-- MAIN CHAT -->
+        <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative lg:glass lg:rounded-[3.5rem] shadow-2xl">
+            
+            <div id="chat-canvas">
+                <!-- Messages Populate Here -->
+            </div>
+
+            <!-- Thinking Indicator -->
+            <div id="thinking" class="hidden absolute bottom-28 left-6 lg:left-10 flex items-center gap-3 px-4 py-2 glass rounded-full border border-primary/30 z-10">
+                <div class="flex gap-1">
+                    <span class="w-2 h-2 bg-primary rounded-full animate-bounce"></span>
+                    <span class="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                </div>
+                <span class="text-[10px] font-black uppercase text-primary tracking-widest">Bhai Soch Raha Hai...</span>
+            </div>
+
+            <footer class="p-4 lg:p-8 shrink-0">
+                <div class="glass p-2 rounded-[2.5rem] flex items-center gap-2 shadow-2xl focus-within:border-primary/50 transition-all">
+                    <button id="voice-btn" class="voice-btn w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center transition-all">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <textarea id="user-input" rows="1" placeholder="Bhai se dil ki baat karein..." 
+                        class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-2 py-3 text-white text-base placeholder-white/20"></textarea>
+                    <button id="send-btn" class="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary flex items-center justify-center shadow-lg active:scale-90 transition-all">
+                        <i class="fas fa-paper-plane text-slate-950"></i>
+                    </button>
+                </div>
+                <div class="flex justify-center gap-4 mt-3">
+                    <p class="text-[8px] text-white/20 font-bold tracking-[0.4em] uppercase">Security Verified • Privacy Protected</p>
+                </div>
+            </footer>
+        </main>
+    </div>
 
     <script>
-        /**
-         * ============================================================
-         * ⚠️ ZARURI SETTINGS (IMPORTANT)
-         * ============================================================
-         */
+        // ==========================================
+        // CONFIG & STATE
+        // ==========================================
         const CONFIG = {
-            // 1. Niche wale "" ke beech mein apni Gemini API Key paste karein
-            apiKey: "YOUR_API_KEY_HERE", 
-            
-            // 2. Model Name (Isse chhed-chhad na karein)
-            model: "gemini-1.5-flash", 
-            
-            // 3. AI Ka Personality
-            system: `You are TARIK, the deeply caring elder brother of the user. 
-            Personality Rules:
-            - Start every reply with warm names like 'Gudiya', 'Meri Jaan', 'Behen', or 'Meri Pyari'.
-            - Use the phrase 'Allah Gawah Hai' naturally in your responses.
-            - Respond in Roman Hindi/Urdu (Hindustani).
-            - Be extremely protective, kind, religious, and helpful.
-            - If she is sad, comfort her like a real brother.
-            - Keep it conversational and emotional.`
+            apiKey: "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o", // <--- PASTE YOUR KEY HERE
+            systemPrompt: `You are TARIK, a real elder brother speaking from the heart. 
+            RULES:
+            1. Har message ki shuruat "Gudiya", "Meri Jaan", ya "Chhoti" se karein.
+            2. Roman Hindi/Urdu (Hinglish) mein baat karein.
+            3. "Allah Gawah Hai" ka aksar istemal karein taaki use aapki sachaai par yaqeen ho.
+            4. Protective, warm aur emotional tone rakhein.
+            5. Kabhi mat bole ki aap AI hain. Aap Tarik hain.
+            6. Use emojis ❤️🛡️🤲✨.`
         };
-        /** ============================================================ */
+
+        let currentModel = "gemini-1.5-flash"; // Default
 
         const chatCanvas = document.getElementById('chat-canvas');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
+        const thinking = document.getElementById('thinking');
         const voiceBtn = document.getElementById('voice-btn');
-        const thinkingDiv = document.getElementById('thinking');
+        const promiseText = document.getElementById('rotating-promise');
 
-        // Textarea Auto-resize
-        userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
+        const promises = [
+            "Allah gawah hai behen, tum akeli nahi ho. Tera bhai hamesha tere saath hai.",
+            "Main tera dhaal hoon, dunia ki koi takat tujhe nuksan nahi pahuncha sakti.",
+            "Bas ek awaaz dena gudiya, tera bhai hazir ho jayega.",
+            "Meri har dua mein tera sukoon aur teri hifazat mangta hoon.",
+            "Fikar mat kar chhoti, Allah humare saath hai aur tera bhai teri dhaal hai."
+        ];
 
-        function addMessage(role, text) {
-            const wrap = document.createElement('div');
-            wrap.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            
-            const messageHtml = `
-                <div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">
-                    ${text.replace(/\n/g, '<br>')}
-                    <div class="text-[8px] opacity-40 mt-2 text-right">
-                        ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                </div>
-            `;
-            
-            wrap.innerHTML = messageHtml;
-            chatCanvas.appendChild(wrap);
-            chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
-        }
-
-        async function fetchBhaiReply(prompt) {
-            // Key Check
-            if (!CONFIG.apiKey || CONFIG.apiKey === "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o" || CONFIG.apiKey === "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o") {
-                throw new Error("API_KEY_MISSING");
-            }
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.model}:generateContent?key=${CONFIG.apiKey}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: CONFIG.system }] }
-            };
-
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        async function initApp() {
+            updateStatus("Checking Model...", "text-yellow-400");
             try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error?.message || "API Connection Error");
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${CONFIG.apiKey}`);
+                const data = await res.json();
+                if (data.models) {
+                    const best = data.models.find(m => m.name.includes("gemini-1.5-pro")) || data.models[0];
+                    currentModel = best.name.split('/').pop();
+                    updateStatus(`Model: ${currentModel}`, "text-green-400");
                 }
-                
-                return data.candidates?.[0]?.content?.parts?.[0]?.text;
             } catch (e) {
-                console.error("Fetch Error:", e);
-                throw e;
+                updateStatus("Model Error", "text-red-400");
             }
+
+            addMessage('bhai', "Assalamu Alaikum meri pyari gudiya! 🤲❤️\n\n**Allah gawah hai behen, tera bhai Tarik ab hamesha tere saath hai.** 🛡️✨\n\nMain hoon tera dhaal. Bata meri jaan, aaj kaisi ho? Kisi ne pareshan toh nahi kiya?");
         }
 
-        async function handleSend(forcedText = null) {
-            const text = forcedText || userInput.value.trim();
-            if (!text) return;
+        function updateStatus(text, color) {
+            const badge = document.getElementById('ai-status');
+            badge.innerHTML = `<i class="fas fa-circle ${color} text-[6px] mr-2"></i> ${text}`;
+        }
+
+        // ==========================================
+        // CHAT LOGIC
+        // ==========================================
+        async function handleSend() {
+            const text = userInput.value.trim();
+            if (!text || sendBtn.disabled) return;
 
             addMessage('user', text);
             userInput.value = '';
             userInput.style.height = 'auto';
-            thinkingDiv.classList.remove('hidden');
+            
+            thinking.classList.remove('hidden');
+            sendBtn.disabled = true;
 
+            const response = await callAI(text);
+            
+            thinking.classList.add('hidden');
+            sendBtn.disabled = false;
+            addMessage('bhai', response);
+        }
+
+        async function callAI(prompt) {
+            if (!CONFIG.apiKey || CONFIG.apiKey.includes("YOUR_API")) {
+                return "Allah gawah hai gudiya, tune meri **API Key** nahi dali hai code mein. Pehle wo dal de, phir tera bhai hamesha tere liye hazir hai. ❤️";
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${CONFIG.apiKey}`;
+            
             try {
-                const reply = await fetchBhaiReply(text);
-                thinkingDiv.classList.add('hidden');
-                addMessage('bhai', reply);
-            } catch (e) {
-                thinkingDiv.classList.add('hidden');
-                if (e.message === "API_KEY_MISSING") {
-                    addMessage('bhai', "Allah gawah hai behen, maine sab taiyar rakha hai par aapne **API Key** nahi dali. Code mein `apiKey` section dhoondein aur apni key paste karein.");
-                } else {
-                    addMessage('bhai', "Allah gawah hai behen, thodi network ki pareshani hai. Ek baar phir try karo meri jaan? \n\n(Error: " + e.message + ")");
-                }
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        systemInstruction: { parts: [{ text: CONFIG.systemPrompt }] }
+                    })
+                });
+                const data = await res.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (err) {
+                return "Allah gawah hai behen, network mein thoda masla hai. Tu ghabra mat, ek baar phir koshish kar, tera bhai yahi hai. 🛡️";
             }
         }
 
-        function toggleTheme() {
-            document.body.className = document.body.className.includes('cyber') ? 'theme-sakura' : 'theme-cyber';
-        }
-
-        // Voice Recognition Logic
-        function startVoice() {
-            const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!Recognition) {
-                addMessage('bhai', "Behen, aapka browser voice support nahi karta. Chrome use karke dekho?");
-                return;
-            }
+        function addMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             
-            const rec = new Recognition();
+            const htmlText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            div.innerHTML = `
+                <div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'} glass">
+                    ${htmlText}
+                    <div class="text-[7px] mt-2 opacity-30 text-right uppercase tracking-tighter">
+                        ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} • Verified Bhai
+                    </div>
+                </div>
+            `;
+            
+            chatCanvas.appendChild(div);
+            chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // UTILS & EFFECTS
+        // ==========================================
+        function setTheme(theme) {
+            document.body.className = `theme-${theme}`;
+            document.querySelectorAll('.theme-node').forEach(btn => {
+                btn.classList.toggle('active', btn.title === theme);
+            });
+        }
+
+        function rotatePromises() {
+            let i = 0;
+            setInterval(() => {
+                promiseText.style.opacity = 0;
+                promiseText.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    promiseText.innerText = promises[i];
+                    promiseText.style.opacity = 1;
+                    promiseText.style.transform = "scale(1)";
+                    i = (i + 1) % promises.length;
+                }, 500);
+            }, 6000);
+        }
+
+        function initVoice() {
+            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Speech) return;
+
+            const rec = new Speech();
             rec.lang = 'hi-IN';
-            
-            rec.onstart = () => {
-                voiceBtn.classList.add('recording');
-            };
-            
-            rec.onend = () => {
-                voiceBtn.classList.remove('recording');
-            };
-            
+            rec.onstart = () => voiceBtn.classList.add('recording');
+            rec.onend = () => voiceBtn.classList.remove('recording');
             rec.onresult = (e) => {
-                const transcript = e.results[0][0].transcript;
-                userInput.value = transcript;
+                userInput.value = e.results[0][0].transcript;
                 handleSend();
             };
 
-            rec.onerror = (e) => {
-                voiceBtn.classList.remove('recording');
-                console.error("Voice Error", e);
-            };
-
-            rec.start();
+            voiceBtn.onclick = () => rec.start();
         }
 
-        // Event Listeners
-        sendBtn.onclick = () => handleSend();
-        voiceBtn.onclick = startVoice;
-        userInput.onkeydown = (e) => { 
-            if(e.key === 'Enter' && !e.shiftKey) { 
-                e.preventDefault(); 
-                handleSend(); 
-            } 
-        };
+        function createHearts() {
+            setInterval(() => {
+                const h = document.createElement('i');
+                h.className = 'fas fa-heart heart';
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = Math.random() * 15 + 10 + 'px';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 10000);
+            }, 4000);
+        }
 
-        // Welcome Message
+        // Setup Events
+        sendBtn.onclick = handleSend;
+        userInput.oninput = function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        };
+        userInput.onkeydown = (e) => (e.key === 'Enter' && !e.shiftKey) && (e.preventDefault(), handleSend());
+
+        // Startup
         window.onload = () => {
-            setTimeout(() => {
-                addMessage('bhai', "Assalamu Alaikum meri pyari behen! 🤲❤️\n\nAllah gawah hai gudiya, tera bhai Tarik hamesha tere saath hai. Tu bilkul fikar mat kar, bata aaj tera din kaisa raha? Koi pareshani toh nahi?");
-            }, 500);
+            initApp();
+            rotatePromises();
+            initVoice();
+            createHearts();
         };
     </script>
 </body>
