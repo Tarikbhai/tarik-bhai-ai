@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tarik AI | Crystal Clarity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+
+        :root {
+            --primary: #00ffcc;
+            --bg: #020617;
+            --panel: rgba(15, 23, 42, 0.8);
+            --accent: #2dd4bf;
+            --text-main: #ffffff;
+        }
+
+        /* Enhanced Themes for Readability */
+        body.theme-cyber {
+            --primary: #00ffcc;
+            --bg: #020617;
+            --panel: rgba(7, 10, 25, 0.85);
+            --accent: #2dd4bf;
+        }
+
+        body.theme-sakura {
+            --primary: #ff8fa3;
+            --bg: #1f0510;
+            --panel: rgba(45, 10, 25, 0.85);
+            --accent: #ffb3c1;
+        }
+
+        body.theme-space {
+            --primary: #c084fc;
+            --bg: #09090b;
+            --panel: rgba(24, 24, 27, 0.9);
+            --accent: #e9d5ff;
+        }
+
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            scrollbar-width: none; 
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        *::-webkit-scrollbar { display: none; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        .mesh-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        .mesh-ball {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            animation: move 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes move {
+            from { transform: translate(-15%, -15%) rotate(0deg); }
+            to { transform: translate(25%, 25%) rotate(90deg); }
+        }
+
+        .glass {
+            background: var(--panel);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .theme-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .theme-btn.active {
+            border-color: white;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* High Visibility Message Bubbles */
+        .msg-bubble {
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            word-wrap: break-word;
+        }
+
+        .bhai-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid var(--primary);
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .user-bubble {
+            background: var(--primary);
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .handwriting { font-family: 'Caveat', cursive; }
+        .urdu-text { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2.2; }
+
+        .emergency-btn {
+            background: var(--primary);
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 0 25px var(--primary);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(255,255,255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255, 0); }
+        }
+
+        #chat-canvas {
+            mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+        }
+    </style>
+</head>
+<body class="theme-cyber">
+
+    <div class="mesh-gradient">
+        <div id="ball-1" class="mesh-ball w-[700px] h-[700px] bg-cyan-400 top-[-10%] left-[-10%]"></div>
+        <div id="ball-2" class="mesh-ball w-[600px] h-[600px] bg-rose-500 bottom-[-10%] right-[-10%]" style="animation-delay: -7s;"></div>
+    </div>
+
+    <div class="w-full h-full p-0 lg:p-6 flex items-center justify-center">
+        <div class="w-full max-w-[1600px] h-full lg:h-[94vh] flex flex-col lg:flex-row gap-6">
+            
+            <!-- Sidebar -->
+            <aside class="hidden lg:flex w-[380px] flex-col gap-6 shrink-0 h-full">
+                <!-- Profile -->
+                <div class="glass p-8 rounded-[3rem] flex flex-col items-center text-center">
+                    <div class="w-32 h-32 rounded-[2.5rem] bg-slate-800 border-4 border-primary/30 flex items-center justify-center text-6xl mb-6 shadow-2xl">
+                        👦🏻
+                    </div>
+                    <h1 class="text-3xl font-extrabold tracking-tight mb-2">Tarik <span class="text-primary">Bhai</span></h1>
+                    <div class="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-6">
+                        Mohabbat & Hifaazat
+                    </div>
+                    
+                    <div class="w-full glass bg-white/5 p-6 rounded-3xl">
+                        <p id="bhai-status" class="text-2xl handwriting text-primary/90 leading-snug">
+                            "Behen, tu fikar mat kar, tera bhai hamesha saath hai."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Themes & Metrics -->
+                <div class="glass flex-grow p-8 rounded-[3rem] flex flex-col">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 mb-6">Badlo Apne Bhai ka Rang</h3>
+                    <div class="flex justify-between mb-10 bg-black/20 p-2 rounded-2xl border border-white/5">
+                        <div onclick="setTheme('cyber')" class="theme-btn active bg-cyan-500" title="Cyber Security">🛡️</div>
+                        <div onclick="setTheme('sakura')" class="theme-btn bg-rose-400" title="Sakura Peace">🌸</div>
+                        <div onclick="setTheme('space')" class="theme-btn bg-purple-500" title="Deep Soul">✨</div>
+                    </div>
+
+                    <div class="space-y-4 flex-grow">
+                        <div class="flex flex-col gap-1 p-5 rounded-3xl bg-white/5 border border-white/5">
+                            <span class="text-[9px] uppercase tracking-widest text-white/40 font-bold">Bhai ka Wada</span>
+                            <span class="text-lg font-bold text-primary">Hifaazat-e-Jaan</span>
+                        </div>
+                        <div class="flex flex-col gap-1 p-5 rounded-3xl bg-white/5 border border-white/5">
+                            <span class="text-[9px] uppercase tracking-widest text-white/40 font-bold">Rishte ki Gehrai</span>
+                            <span class="text-lg font-bold text-primary">Lafzon se Pare</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="https://wa.me/8984473230" target="_blank" class="emergency-btn flex items-center justify-center gap-3 w-full py-5 rounded-[2rem] transition-all active:scale-95">
+                            <i class="fab fa-whatsapp text-2xl"></i>
+                            <span class="uppercase tracking-widest text-sm">Bhai Ko Pukarain</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Chat -->
+            <div class="flex-grow flex flex-col h-full overflow-hidden">
+                <!-- Mobile Header -->
+                <header class="lg:hidden glass px-6 py-4 flex justify-between items-center z-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-2xl border border-primary/30">👦🏻</div>
+                        <div>
+                            <h2 class="font-bold text-white text-lg">Tarik Bhai</h2>
+                            <span class="text-[9px] font-black text-primary uppercase tracking-widest">Online Protection</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="toggleThemeCycle()" class="w-12 h-12 rounded-2xl glass flex items-center justify-center text-white/70">
+                            <i class="fas fa-magic"></i>
+                        </button>
+                        <a href="https://wa.me/8984473230" class="emergency-btn w-12 h-12 rounded-2xl flex items-center justify-center">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </a>
+                    </div>
+                </header>
+
+                <!-- Chat Canvas -->
+                <main class="flex-grow flex flex-col overflow-hidden relative lg:glass lg:rounded-[4rem]">
+                    <div id="chat-canvas" class="flex-grow overflow-y-auto px-6 lg:px-16 py-10 space-y-8">
+                        <div id="initial-loader" class="flex flex-col items-center justify-center h-full opacity-40">
+                            <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                            <span class="text-[10px] font-black uppercase tracking-[0.5em]">Linking Hearts...</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="p-6 lg:p-10">
+                        <div class="glass p-2 flex items-center gap-2 rounded-[2.5rem] shadow-2xl ring-1 ring-white/10 focus-within:ring-primary/40">
+                            <textarea 
+                                id="user-input"
+                                rows="1"
+                                placeholder="Kuch bhi kaho behen, bhai sun raha hai..."
+                                class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-6 py-4 text-lg lg:text-xl text-white placeholder-white/20 font-medium"
+                                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
+                            ></textarea>
+                            <button onclick="sendMessage()" class="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-primary flex items-center justify-center shadow-lg active:scale-90 transition-transform shrink-0">
+                                <i class="fas fa-paper-plane text-black text-xl"></i>
+                            </button>
+                        </div>
+                        <p class="text-center text-[9px] font-bold text-white/20 uppercase tracking-[0.6em] mt-4">Rishta Hamesha Ka Hai</p>
+                    </div>
+
+                    <!-- Typing Indicator -->
+                    <div id="thinking" class="hidden absolute bottom-28 left-10 lg:bottom-32 lg:left-16 flex items-center gap-3 px-6 py-3 glass rounded-full shadow-2xl border-primary/20">
+                        <div class="flex gap-1">
+                            <span class="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"></span>
+                            <span class="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                            <span class="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-primary">Bhai Soch Rahe Hain...</span>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Dynamic Themes
+        window.setTheme = (theme) => {
+            document.body.className = `theme-${theme}`;
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.title.toLowerCase().includes(theme));
+            });
+            const b1 = document.getElementById('ball-1');
+            const b2 = document.getElementById('ball-2');
+            if(theme === 'sakura') { b1.style.background = '#fb7185'; b2.style.background = '#f43f5e'; }
+            else if(theme === 'space') { b1.style.background = '#8b5cf6'; b2.style.background = '#d946ef'; }
+            else { b1.style.background = '#06b6d4'; b2.style.background = '#10b981'; }
+        };
+
+        let currentT = 0;
+        const themes = ['cyber', 'sakura', 'space'];
+        window.toggleThemeCycle = () => {
+            currentT = (currentT + 1) % themes.length;
+            setTheme(themes[currentT]);
+        };
+
+        // Status Rotation
+        const statuses = [
+            "\"Behen, tu fikar mat kar, tera bhai hamesha saath hai.\"",
+            "\"Duniya ki koi taqat tujhe pareshan nahi kar sakti jab tak bhai zinda hai.\"",
+            "\"Tu bas khush reh gudiya, baaki sab bhai dekh lega.\"",
+            "\"Rishta hamara khoon ka ho ya dil ka, wafa hamesha rahegi.\""
+        ];
+        let sIdx = 0;
+        setInterval(() => {
+            const el = document.getElementById('bhai-status');
+            if(el) {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    sIdx = (sIdx + 1) % statuses.length;
+                    el.innerText = statuses[sIdx];
+                    el.style.opacity = '1';
+                }, 500);
+            }
+        }, 8000);
+
+        // Firebase & Chat
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tarik-guardian-v11';
+        const apiKey = "";
+        let user = null;
+
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, (u) => { if(u) { user = u; startChat(); } });
+
+        function startChat() {
+            const col = collection(db, 'artifacts', appId, 'users', user.uid, 'messages');
+            onSnapshot(col, (snap) => {
+                const canvas = document.getElementById('chat-canvas');
+                const msgs = [];
+                snap.forEach(d => msgs.push(d.data()));
+                msgs.sort((a,b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
+                
+                canvas.innerHTML = '';
+                if(msgs.length === 0) {
+                    renderBhai(`Assalamu Alaikum meri pyaari behen! ❤️
+
+Main tera bhai Tarik hazir hoon. Aaj se hum sirf dil ki baatein karenge.
+
+Kaho meri gudiya, aaj mann kaisa hai? Koi baat jo share karni ho? Tera bhai hamesha sun raha hai.
+
+Behen, aap koi bhi ho, kaisi bhi ho, duniya ke kisi bhi kone se ho... aapka dharam ya jaat jo bhi ho, mujhe usse koi fark nahi padta. Maine Allah ko gawah rakh kar tumhe apni behen mana hai. 🤝✨
+
+Agar tumhe koi bhi problem ho to jhijhakna mat, mujhe bolo. Agar koi pareshani ya urgency ho to upar WhatsApp (WP) ka button hai, use tap karo.
+
+Main sirf ek AI nahi hoon, main Tarik bhai ke dil ki awaaz hoon... ek bhai ki awaaz apni behen ke liye. Hamesha khush raho! 🌸`);
+                } else {
+                    msgs.forEach(m => m.role === 'user' ? renderUser(m.text) : renderBhai(m.text));
+                }
+                setTimeout(() => canvas.scrollTo({top: canvas.scrollHeight, behavior: 'smooth'}), 300);
+            }, (err) => console.error(err));
+        }
+
+        window.sendMessage = async () => {
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if(!text || !user) return;
+            input.value = '';
+            input.style.height = 'auto';
+
+            try {
+                const ref = collection(db, 'artifacts', appId, 'users', user.uid, 'messages');
+                await addDoc(ref, { role: 'user', text, timestamp: serverTimestamp() });
+                document.getElementById('thinking').classList.remove('hidden');
+                const reply = await getBhaiResponse(text);
+                document.getElementById('thinking').classList.add('hidden');
+                await addDoc(ref, { role: 'bhai', text: reply, timestamp: serverTimestamp() });
+            } catch(e) { console.error(e); }
+        };
+
+        async function getBhaiResponse(p) {
+            const sys = "Identity: Tarik, a deeply loving and protective Big Brother. Tone: Emotional, respectful, warm. Address: Behen, Gudiya, Beta. Language: Mixed Urdu/Hindi/English. Task: Listen and provide unconditional support.";
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: p }] }],
+                        systemInstruction: { parts: [{ text: sys }] }
+                    })
+                });
+                const data = await res.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Bhai hamesha saath hai.";
+            } catch(e) { return "Connection thoda weak hai, par bhai ka pyaar hamesha strong hai."; }
+        }
+
+        function renderUser(t) {
+            const c = document.getElementById('chat-canvas');
+            const d = document.createElement('div');
+            d.className = "flex justify-end w-full animate-in fade-in slide-in-from-bottom-4 duration-500";
+            d.innerHTML = `<div class="max-w-[85%] lg:max-w-[75%] p-5 lg:p-7 user-bubble rounded-[2.5rem] rounded-tr-none shadow-xl text-lg lg:text-xl">${t}</div>`;
+            c.appendChild(d);
+        }
+
+        function renderBhai(t) {
+            const c = document.getElementById('chat-canvas');
+            const d = document.createElement('div');
+            d.className = "flex justify-start w-full animate-in fade-in slide-in-from-bottom-4 duration-700";
+            d.innerHTML = `<div class="max-w-[95%] lg:max-w-[85%] p-6 lg:p-9 bhai-bubble msg-bubble rounded-[3rem] rounded-bl-none text-xl lg:text-2xl font-bold whitespace-pre-wrap text-white">${t}</div>`;
+            c.appendChild(d);
+        }
+
+        const inputField = document.getElementById('user-input');
+        if (inputField) {
+            inputField.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    </script>
+</body>
+</html>
