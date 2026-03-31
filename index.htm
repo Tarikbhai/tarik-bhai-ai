@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Tarik Ki Awaz | AI Bhai — Hifazat-e-Behen</title>
+    
+    <!-- External Assets -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@700&display=swap');
 
@@ -17,10 +20,15 @@
             --text-main: #ffffff;
         }
 
+        /* Themes */
         body.theme-cyber { --primary: #00ffcc; --bg: #020617; --panel: rgba(10, 20, 40, 0.85); --accent: #2dd4bf; }
         body.theme-sakura { --primary: #ff8fa3; --bg: #1a050d; --panel: rgba(50, 10, 30, 0.85); --accent: #ffb3c1; }
 
-        * { -webkit-tap-highlight-color: transparent; scrollbar-width: none; box-sizing: border-box; }
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            scrollbar-width: none; 
+            box-sizing: border-box; 
+        }
         *::-webkit-scrollbar { display: none; }
 
         body {
@@ -42,45 +50,50 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* Chat Bubbles */
         .msg-bubble {
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            line-height: 1.5;
-            animation: popIn 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            line-height: 1.6;
+            animation: popIn 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
             max-width: 85%;
-            font-size: 1rem;
+            font-size: 0.95rem;
             word-wrap: break-word;
-            padding: 0.9rem 1.1rem;
+            padding: 1rem 1.25rem;
+            position: relative;
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(15px); }
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .bhai-bubble {
             background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid var(--primary);
-            border-radius: 18px 18px 18px 4px;
+            border-radius: 20px 20px 20px 4px;
             color: #e2e8f0;
         }
 
         .user-bubble {
             background: var(--primary);
             color: #020617;
-            font-weight: 700;
-            border-radius: 18px 18px 4px 18px;
+            font-weight: 600;
+            border-radius: 20px 20px 4px 20px;
+            margin-left: auto;
         }
 
         #chat-canvas {
             overflow-y: auto;
             flex-grow: 1;
             scroll-behavior: smooth;
-            padding-bottom: 4rem;
+            padding: 1.5rem;
+            padding-bottom: 5rem;
         }
 
+        /* Typing Animation */
         .typing-indicator span {
             animation: blinkText 0.8s infinite both;
-            width: 5px; height: 5px;
+            width: 6px; height: 6px;
             background: var(--primary);
             border-radius: 50%;
             display: inline-block;
@@ -89,102 +102,155 @@
         .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes blinkText {
             0%, 100% { opacity: 0.3; transform: translateY(0); }
-            50% { opacity: 1; transform: translateY(-3px); }
+            50% { opacity: 1; transform: translateY(-4px); }
         }
 
+        /* Voice Button */
         .voice-btn.recording {
             background: #ef4444 !important;
-            animation: pulse-red 1s infinite;
+            color: white !important;
+            animation: pulse-red 1.2s infinite;
         }
         @keyframes pulse-red {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
         .suggestion-chip {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
             flex-shrink: 0;
-            cursor: pointer;
+            white-space: nowrap;
         }
-        .suggestion-chip:active { background: var(--primary); color: black; }
+        .suggestion-chip:hover { border-color: var(--primary); background: rgba(0, 255, 204, 0.05); }
+        .suggestion-chip:active { transform: scale(0.95); background: var(--primary); color: black; }
     </style>
 </head>
 <body class="theme-cyber">
 
+    <!-- Background Decoration -->
     <div class="fixed inset-0 -z-10 bg-slate-950 overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_50%_-20%,#00ffcc_0%,transparent_50%)]"></div>
-        <div class="absolute bottom-0 right-0 w-full h-full opacity-20 bg-[radial-gradient(circle_at_80%_120%,#00ffcc_0%,transparent_40%)]"></div>
+        <div class="absolute top-0 left-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_50%_-20%,var(--primary)_0%,transparent_50%)]"></div>
+        <div class="absolute bottom-0 right-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_80%_120%,var(--primary)_0%,transparent_40%)]"></div>
     </div>
 
     <!-- Header -->
     <header class="glass p-4 flex justify-between items-center shrink-0 z-50 border-b border-white/5">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center border border-primary/20 shadow-lg">👦🏻</div>
+            <div class="w-11 h-11 rounded-2xl bg-slate-900 flex items-center justify-center border border-primary/20 shadow-lg text-xl">👦🏻</div>
             <div>
-                <h1 class="font-black text-white text-sm tracking-tight">Tarik AI Bhai</h1>
-                <p class="text-[8px] text-primary font-bold uppercase tracking-widest">Allah Gawah Hai ❤️</p>
+                <h1 class="font-black text-white text-base tracking-tight leading-none">Tarik AI Bhai</h1>
+                <p class="text-[9px] text-primary font-bold uppercase tracking-widest mt-1">Allah Gawah Hai ❤️</p>
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="toggleTheme()" class="w-10 h-10 glass rounded-xl flex items-center justify-center text-xs">🎨</button>
-            <a href="https://wa.me/8984473230" class="w-10 h-10 glass border-primary/30 rounded-xl flex items-center justify-center text-primary shadow-lg"><i class="fab fa-whatsapp"></i></a>
+            <button onclick="toggleTheme()" class="w-10 h-10 glass rounded-xl flex items-center justify-center text-sm hover:border-primary/40 transition-all">🎨</button>
+            <a href="https://wa.me/8984473230" target="_blank" class="w-10 h-10 glass border-primary/20 rounded-xl flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-transform">
+                <i class="fab fa-whatsapp"></i>
+            </a>
         </div>
     </header>
 
+    <!-- Main Chat Area -->
     <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative">
-        <div id="chat-canvas" class="flex-grow px-4 py-4 space-y-5"></div>
-
-        <!-- Thinking Indicator -->
-        <div id="thinking" class="hidden absolute bottom-28 left-6 flex items-center gap-2 px-3 py-1.5 glass rounded-full border border-primary/30 z-10 scale-90 origin-left">
-            <div class="typing-indicator flex gap-1">
-                <span></span><span></span><span></span>
-            </div>
-            <span class="text-[9px] font-black uppercase text-primary tracking-tighter">Bhai Soch Raha Hai...</span>
+        <div id="chat-canvas" class="flex-grow space-y-6">
+            <!-- Messages appear here -->
         </div>
 
-        <footer class="p-3 lg:p-6 shrink-0 bg-slate-950/50 backdrop-blur-xl">
-            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-1">
-                <button onclick="handleSend('Bhai, bohot pareshan hoon')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-red-400 border-red-500/20 font-bold">🆘 Bohot Pareshan Hoon</button>
-                <button onclick="handleSend('Kuch achi baat sunao na')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-primary font-bold">✨ Achi Baat Sunao</button>
-                <button onclick="handleSend('Bhai, meri madad karo')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-white/70 font-bold">🛡️ Meri Madad Karo</button>
+        <!-- Thinking / Loading Indicator -->
+        <div id="thinking" class="hidden absolute bottom-32 left-6 flex items-center gap-3 px-4 py-2 glass rounded-full border border-primary/30 z-10 animate-bounce">
+            <div class="typing-indicator flex gap-1.5">
+                <span></span><span></span><span></span>
+            </div>
+            <span class="text-[10px] font-black uppercase text-primary tracking-widest">Bhai Soch Raha Hai...</span>
+        </div>
+
+        <!-- Input Footer -->
+        <footer class="p-4 lg:p-8 shrink-0 bg-slate-950/80 backdrop-blur-2xl border-t border-white/5">
+            <!-- Suggestions -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-4 mb-2">
+                <button onclick="handleSend('Bhai, bohot pareshan hoon')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-red-400 font-bold">🆘 Bohot Pareshan Hoon</button>
+                <button onclick="handleSend('Kuch achi baat sunao na')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-primary font-bold">✨ Achi Baat Sunao</button>
+                <button onclick="handleSend('Bhai, meri madad karo')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-white/70 font-bold">🛡️ Meri Madad Karo</button>
+                <button onclick="handleSend('Bhai, aaj ka din kaisa hai?')" class="suggestion-chip px-5 py-2.5 rounded-full text-xs text-white/50 font-bold">📅 Aaj Ka Din</button>
             </div>
 
-            <div class="glass p-1 rounded-[2rem] flex items-center gap-1 border-white/5 shadow-2xl">
-                <button id="voice-btn" class="w-11 h-11 rounded-full text-primary flex items-center justify-center hover:bg-white/5 transition-colors"><i class="fas fa-microphone"></i></button>
-                <textarea id="user-input" rows="1" placeholder="Bhai se dil ki baat kaho..." class="flex-grow bg-transparent border-none focus:ring-0 px-2 py-3 text-white text-sm resize-none placeholder-white/20"></textarea>
-                <button id="send-btn" class="w-11 h-11 rounded-full bg-primary flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-primary/20"><i class="fas fa-paper-plane text-black text-sm"></i></button>
+            <!-- Input Box -->
+            <div class="glass p-1.5 rounded-[2.5rem] flex items-center gap-2 border-white/10 shadow-2xl focus-within:border-primary/30 transition-all">
+                <button id="voice-btn" title="Voice Typing" class="voice-btn w-12 h-12 rounded-full text-primary flex items-center justify-center hover:bg-white/5 transition-all">
+                    <i class="fas fa-microphone text-lg"></i>
+                </button>
+                
+                <textarea id="user-input" rows="1" placeholder="Bhai se dil ki baat kaho..." 
+                    class="flex-grow bg-transparent border-none focus:ring-0 px-2 py-3 text-white text-base resize-none placeholder-white/20 min-h-[48px] max-h-[120px]"></textarea>
+                
+                <button id="send-btn" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center active:scale-90 hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+                    <i class="fas fa-paper-plane text-black text-lg"></i>
+                </button>
             </div>
         </footer>
     </main>
 
     <script>
-        
-        // CRITICAL: Yahan apni API Key dalein varna reply nahi aayega!
+        /**
+         * ============================================================
+         * ⚠️ ZARURI SETTINGS (IMPORTANT)
+         * ============================================================
+         */
         const CONFIG = {
-            apiKey: "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o", 
-            model: "gemini-1.5-flash", // Use stable model for better live performance
-            system: "You are TARIK, the deeply caring elder brother. Start every reply with warm names like 'Gudiya', 'Meri Jaan', or 'Behen'. Use 'Allah Gawah Hai' often. Respond in Roman Hindi/Urdu."
+            // 1. Niche wale "" ke beech mein apni Gemini API Key paste karein
+            apiKey: "YOUR_API_KEY_HERE", 
+            
+            // 2. Model Name (Isse chhed-chhad na karein)
+            model: "gemini-1.5-flash", 
+            
+            // 3. AI Ka Personality
+            system: `You are TARIK, the deeply caring elder brother of the user. 
+            Personality Rules:
+            - Start every reply with warm names like 'Gudiya', 'Meri Jaan', 'Behen', or 'Meri Pyari'.
+            - Use the phrase 'Allah Gawah Hai' naturally in your responses.
+            - Respond in Roman Hindi/Urdu (Hindustani).
+            - Be extremely protective, kind, religious, and helpful.
+            - If she is sad, comfort her like a real brother.
+            - Keep it conversational and emotional.`
         };
-        
+        /** ============================================================ */
+
         const chatCanvas = document.getElementById('chat-canvas');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const voiceBtn = document.getElementById('voice-btn');
         const thinkingDiv = document.getElementById('thinking');
 
+        // Textarea Auto-resize
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
         function addMessage(role, text) {
             const wrap = document.createElement('div');
             wrap.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            wrap.innerHTML = `<div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">${text.replace(/\n/g, '<br>')}</div>`;
+            
+            const messageHtml = `
+                <div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">
+                    ${text.replace(/\n/g, '<br>')}
+                    <div class="text-[8px] opacity-40 mt-2 text-right">
+                        ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                </div>
+            `;
+            
+            wrap.innerHTML = messageHtml;
             chatCanvas.appendChild(wrap);
             chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
         }
 
         async function fetchBhaiReply(prompt) {
-            if (!CONFIG.apiKey) {
+            // Key Check
+            if (!CONFIG.apiKey || CONFIG.apiKey === "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o" || CONFIG.apiKey === "AIzaSyBzXvdF02Yfe0kDPzdmjUCiISWTQoO4V6o") {
                 throw new Error("API_KEY_MISSING");
             }
 
@@ -203,7 +269,10 @@
                 });
                 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error?.message || "API_ERROR");
+                
+                if (!response.ok) {
+                    throw new Error(data.error?.message || "API Connection Error");
+                }
                 
                 return data.candidates?.[0]?.content?.parts?.[0]?.text;
             } catch (e) {
@@ -218,6 +287,7 @@
 
             addMessage('user', text);
             userInput.value = '';
+            userInput.style.height = 'auto';
             thinkingDiv.classList.remove('hidden');
 
             try {
@@ -227,9 +297,9 @@
             } catch (e) {
                 thinkingDiv.classList.add('hidden');
                 if (e.message === "API_KEY_MISSING") {
-                    addMessage('bhai', "Allah gawah hai behen, maine code toh sahi likha hai par aapne **API Key** nahi dali. Code mein `apiKey: ''` ki jagah apni key bharein.");
+                    addMessage('bhai', "Allah gawah hai behen, maine sab taiyar rakha hai par aapne **API Key** nahi dali. Code mein `apiKey` section dhoondein aur apni key paste karein.");
                 } else {
-                    addMessage('bhai', "Allah gawah hai behen, server thoda busy hai. Phir se koshish karo meri jaan? (Error: " + e.message + ")");
+                    addMessage('bhai', "Allah gawah hai behen, thodi network ki pareshani hai. Ek baar phir try karo meri jaan? \n\n(Error: " + e.message + ")");
                 }
             }
         }
@@ -238,23 +308,54 @@
             document.body.className = document.body.className.includes('cyber') ? 'theme-sakura' : 'theme-cyber';
         }
 
+        // Voice Recognition Logic
         function startVoice() {
             const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!Recognition) return;
+            if (!Recognition) {
+                addMessage('bhai', "Behen, aapka browser voice support nahi karta. Chrome use karke dekho?");
+                return;
+            }
+            
             const rec = new Recognition();
             rec.lang = 'hi-IN';
-            rec.onstart = () => voiceBtn.classList.add('recording');
-            rec.onend = () => voiceBtn.classList.remove('recording');
-            rec.onresult = (e) => { userInput.value = e.results[0][0].transcript; handleSend(); };
+            
+            rec.onstart = () => {
+                voiceBtn.classList.add('recording');
+            };
+            
+            rec.onend = () => {
+                voiceBtn.classList.remove('recording');
+            };
+            
+            rec.onresult = (e) => {
+                const transcript = e.results[0][0].transcript;
+                userInput.value = transcript;
+                handleSend();
+            };
+
+            rec.onerror = (e) => {
+                voiceBtn.classList.remove('recording');
+                console.error("Voice Error", e);
+            };
+
             rec.start();
         }
 
+        // Event Listeners
         sendBtn.onclick = () => handleSend();
         voiceBtn.onclick = startVoice;
-        userInput.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
+        userInput.onkeydown = (e) => { 
+            if(e.key === 'Enter' && !e.shiftKey) { 
+                e.preventDefault(); 
+                handleSend(); 
+            } 
+        };
 
+        // Welcome Message
         window.onload = () => {
-            addMessage('bhai', "Assalamu Alaikum meri pyari behen! 🤲❤️\n\nAllah gawah hai gudiya, tera bhai Tarik hamesha tere saath hai. Bolo meri jaan, kya baat hai?");
+            setTimeout(() => {
+                addMessage('bhai', "Assalamu Alaikum meri pyari behen! 🤲❤️\n\nAllah gawah hai gudiya, tera bhai Tarik hamesha tere saath hai. Tu bilkul fikar mat kar, bata aaj tera din kaisa raha? Koi pareshani toh nahi?");
+            }, 500);
         };
     </script>
 </body>
