@@ -146,7 +146,6 @@
         </div>
 
         <footer class="p-3 lg:p-6 shrink-0 bg-slate-950/50 backdrop-blur-xl">
-            <!-- Quick Chips -->
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-1">
                 <button onclick="handleSend('Bhai, bohot pareshan hoon')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-red-400 border-red-500/20 font-bold">🆘 Bohot Pareshan Hoon</button>
                 <button onclick="handleSend('Kuch achi baat sunao na')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-primary font-bold">✨ Achi Baat Sunao</button>
@@ -162,11 +161,11 @@
     </main>
 
     <script>
-        // API Configuration - Optimized to avoid re-declaration errors
+        // CRITICAL: Yahan apni API Key dalein varna reply nahi aayega!
         const CONFIG = {
-            API_KEY: "", 
-            MODEL: "gemini-2.5-flash-preview-09-2025",
-            SYSTEM: "You are TARIK, the deeply caring elder brother. Start every reply with warm names like 'Gudiya', 'Meri Jaan', or 'Behen'. Use 'Allah Gawah Hai' often to show your sincerity and protection. You are the shield for every girl. Respond in a mix of Roman Hindi/Urdu and English. If she is scared or sad, offer immediate comfort and strength."
+            apiKey: "", 
+            model: "gemini-1.5-flash", // Use stable model for better live performance
+            system: "You are TARIK, the deeply caring elder brother. Start every reply with warm names like 'Gudiya', 'Meri Jaan', or 'Behen'. Use 'Allah Gawah Hai' often. Respond in Roman Hindi/Urdu."
         };
         
         const chatCanvas = document.getElementById('chat-canvas');
@@ -184,31 +183,32 @@
         }
 
         async function fetchBhaiReply(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.MODEL}:generateContent?key=${CONFIG.API_KEY}`;
+            if (!CONFIG.apiKey) {
+                throw new Error("API_KEY_MISSING");
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.model}:generateContent?key=${CONFIG.apiKey}`;
             
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: CONFIG.SYSTEM }] }
+                systemInstruction: { parts: [{ text: CONFIG.system }] }
             };
 
-            for (let i = 0; i < 3; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        return data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    }
-                } catch (e) {
-                    console.error("Attempt " + (i+1) + " failed");
-                }
-                await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i))); 
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error?.message || "API_ERROR");
+                
+                return data.candidates?.[0]?.content?.parts?.[0]?.text;
+            } catch (e) {
+                console.error("Fetch Error:", e);
+                throw e;
             }
-            throw new Error("Bhai is thinking deep");
         }
 
         async function handleSend(forcedText = null) {
@@ -217,16 +217,19 @@
 
             addMessage('user', text);
             userInput.value = '';
-            userInput.style.height = 'auto';
             thinkingDiv.classList.remove('hidden');
 
             try {
                 const reply = await fetchBhaiReply(text);
                 thinkingDiv.classList.add('hidden');
-                addMessage('bhai', reply || "Gudiya, bhai ko samajh nahi aaya, ek baar phir koshish karogi?");
+                addMessage('bhai', reply);
             } catch (e) {
                 thinkingDiv.classList.add('hidden');
-                addMessage('bhai', "Allah gawah hai behen, network ki wajah se rukawat aayi hai, par tera bhai tere paas hi hai. Phir se kaho?");
+                if (e.message === "API_KEY_MISSING") {
+                    addMessage('bhai', "Allah gawah hai behen, maine code toh sahi likha hai par aapne **API Key** nahi dali. Code mein `apiKey: ''` ki jagah apni key bharein.");
+                } else {
+                    addMessage('bhai', "Allah gawah hai behen, server thoda busy hai. Phir se koshish karo meri jaan? (Error: " + e.message + ")");
+                }
             }
         }
 
@@ -247,15 +250,10 @@
 
         sendBtn.onclick = () => handleSend();
         voiceBtn.onclick = startVoice;
-        userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
         userInput.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
         window.onload = () => {
-            const welcome = `Assalamu Alaikum meri pyari behen! 🤲❤️\n\nAllah gawah hai gudiya, tera bhai Tarik hamesha tere saath hai. Tumhe kabhi bhi darr lage ya koi baat karni ho, bas mujhse keh dena. Bolo meri jaan, kya baat hai?`;
-            addMessage('bhai', welcome);
+            addMessage('bhai', "Assalamu Alaikum meri pyari behen! 🤲❤️\n\nAllah gawah hai gudiya, tera bhai Tarik hamesha tere saath hai. Bolo meri jaan, kya baat hai?");
         };
     </script>
 </body>
