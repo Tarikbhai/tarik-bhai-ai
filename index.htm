@@ -19,13 +19,8 @@
 
         body.theme-cyber { --primary: #00ffcc; --bg: #020617; --panel: rgba(10, 20, 40, 0.85); --accent: #2dd4bf; }
         body.theme-sakura { --primary: #ff8fa3; --bg: #1a050d; --panel: rgba(50, 10, 30, 0.85); --accent: #ffb3c1; }
-        body.theme-space { --primary: #c084fc; --bg: #050510; --panel: rgba(20, 10, 40, 0.85); --accent: #e9d5ff; }
 
-        * { 
-            -webkit-tap-highlight-color: transparent; 
-            scrollbar-width: none; 
-            box-sizing: border-box;
-        }
+        * { -webkit-tap-highlight-color: transparent; scrollbar-width: none; box-sizing: border-box; }
         *::-webkit-scrollbar { display: none; }
 
         body {
@@ -34,32 +29,10 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow: hidden; 
             height: 100dvh; 
-            width: 100vw;
-            position: fixed;
-            margin: 0;
             display: flex;
             flex-direction: column;
+            margin: 0;
             transition: background-color 0.4s ease;
-        }
-
-        .background-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2;
-            background: radial-gradient(circle at center, #1e293b 0%, var(--bg) 100%);
-        }
-
-        .mesh-ball {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.3;
-            animation: move 25s infinite alternate ease-in-out;
-        }
-
-        @keyframes move {
-            0% { transform: translate(-20%, -20%) scale(1); }
-            100% { transform: translate(20%, 30%) scale(1.1); }
         }
 
         .glass {
@@ -70,72 +43,46 @@
         }
 
         .msg-bubble {
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            line-height: 1.6;
-            animation: popIn 0.3s ease-out;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            line-height: 1.5;
+            animation: popIn 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
             max-width: 85%;
             font-size: 1rem;
             word-wrap: break-word;
+            padding: 0.9rem 1.1rem;
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            from { opacity: 0; transform: scale(0.9) translateY(15px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .bhai-bubble {
             background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid var(--primary);
-            color: #f1f5f9;
-            border-radius: 20px 20px 20px 4px;
-            padding: 1rem 1.2rem;
+            border-radius: 18px 18px 18px 4px;
+            color: #e2e8f0;
         }
 
         .user-bubble {
             background: var(--primary);
             color: #020617;
             font-weight: 700;
-            border-radius: 20px 20px 4px 20px;
-            padding: 0.8rem 1.2rem;
+            border-radius: 18px 18px 4px 18px;
         }
 
         .handwriting { font-family: 'Caveat', cursive; }
-
-        .emergency-btn {
-            background: var(--primary);
-            color: #000;
-            font-weight: 800;
-            animation: pulse-glow 2s infinite;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px var(--primary); }
-            50% { box-shadow: 0 0 20px var(--primary); }
-            100% { box-shadow: 0 0 5px var(--primary); }
-        }
 
         #chat-canvas {
             overflow-y: auto;
             flex-grow: 1;
             scroll-behavior: smooth;
-            padding-bottom: 2rem;
+            padding-bottom: 4rem;
         }
-
-        .theme-node {
-            width: 40px; height: 40px;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-        }
-        .theme-node.active { border-color: var(--primary); background: rgba(255,255,255,0.1); }
 
         .typing-indicator span {
-            animation: blinkText 1s infinite both;
-            width: 6px; height: 6px;
+            animation: blinkText 0.8s infinite both;
+            width: 5px; height: 5px;
             background: var(--primary);
             border-radius: 50%;
             display: inline-block;
@@ -143,117 +90,81 @@
         .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
         .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes blinkText {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-3px); }
         }
-        
+
+        .voice-btn.recording {
+            background: #ef4444 !important;
+            animation: pulse-red 1s infinite;
+        }
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
         .suggestion-chip {
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.2s;
+            flex-shrink: 0;
         }
-        .suggestion-chip:active { transform: scale(0.95); }
-
-        .promise-text { transition: opacity 0.5s ease; }
-
-        @media (max-width: 1024px) {
-            body { height: 100vh; height: -webkit-fill-available; }
-        }
+        .suggestion-chip:active { background: var(--primary); color: black; }
     </style>
 </head>
 <body class="theme-cyber">
 
-    <div class="background-container" id="bg-container">
-        <div class="mesh-ball w-[80vw] h-[80vw] bg-cyan-600/20 top-[-10%] left-[-10%]"></div>
-        <div class="mesh-ball w-[70vw] h-[70vw] bg-teal-600/20 bottom-[-10%] right-[-10%]" style="animation-delay: -3s;"></div>
+    <div class="fixed inset-0 -z-10 bg-slate-950 overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_50%_-20%,#00ffcc_0%,transparent_50%)]"></div>
+        <div class="absolute bottom-0 right-0 w-full h-full opacity-20 bg-[radial-gradient(circle_at_80%_120%,#00ffcc_0%,transparent_40%)]"></div>
     </div>
 
-    <div class="w-full h-full flex flex-col lg:flex-row p-0 lg:p-6 lg:gap-6 relative overflow-hidden">
+    <!-- Simplified Header -->
+    <header class="glass p-4 flex justify-between items-center shrink-0 z-50 border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center border border-primary/20 shadow-lg">👦🏻</div>
+            <div>
+                <h1 class="font-black text-white text-sm tracking-tight">Tarik AI Bhai</h1>
+                <p class="text-[8px] text-primary font-bold uppercase tracking-widest">Allah Gawah Hai ❤️</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="toggleTheme()" class="w-10 h-10 glass rounded-xl flex items-center justify-center text-xs">🎨</button>
+            <a href="https://wa.me/8984473230" class="w-10 h-10 glass border-primary/30 rounded-xl flex items-center justify-center text-primary shadow-lg"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </header>
 
-        <!-- Sidebar (Desktop) -->
-        <aside class="hidden lg:flex w-[350px] flex-col gap-6 h-full shrink-0">
-            <div class="glass p-8 rounded-[3rem] text-center">
-                <div class="w-20 h-20 mx-auto rounded-2xl bg-slate-800 border-2 border-primary/30 flex items-center justify-center text-4xl mb-4 shadow-2xl">👦🏻⚡</div>
-                <h1 class="text-xl font-black mb-1">Tarik <span class="text-primary">AI Bhai</span></h1>
-                <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-4">Allah Gawah Hai ❤️</p>
-                <div class="bg-black/30 p-4 rounded-xl">
-                    <p class="text-lg handwriting text-primary/80">"Behen, tera bhai tere liye hamesha haazir hai."</p>
-                </div>
+    <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative">
+        <div id="chat-canvas" class="flex-grow px-4 py-4 space-y-5"></div>
+
+        <!-- Faster Thinking Indicator -->
+        <div id="thinking" class="hidden absolute bottom-28 left-6 flex items-center gap-2 px-3 py-1.5 glass rounded-full border border-primary/30 z-10 scale-90 origin-left">
+            <div class="typing-indicator flex gap-1">
+                <span></span><span></span><span></span>
+            </div>
+            <span class="text-[9px] font-black uppercase text-primary tracking-tighter">Bhai Soch Raha Hai...</span>
+        </div>
+
+        <footer class="p-3 lg:p-6 shrink-0 bg-slate-950/50 backdrop-blur-xl">
+            <!-- Quick Chips -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-1">
+                <button onclick="handleSend('Bhai, bohot pareshan hoon')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-red-400 border-red-500/20 font-bold">🆘 Bohot Pareshan Hoon</button>
+                <button onclick="handleSend('Kuch achi baat sunao na')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-primary font-bold">✨ Achi Baat Sunao</button>
+                <button onclick="handleSend('Bhai, meri madad karo')" class="suggestion-chip px-4 py-2 rounded-full text-[10px] text-white/70 font-bold">🛡️ Meri Madad Karo</button>
             </div>
 
-            <div class="glass p-6 rounded-[2.5rem] flex-grow flex flex-col shadow-2xl">
-                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/20 mb-4 text-center">✨ Aaj Ka Wada ✨</h3>
-                <div class="flex-grow flex items-center justify-center">
-                    <div id="promise-text" class="promise-text italic text-white/90 text-center handwriting text-xl">
-                        "Allah gawah hai behen, tum akeli nahi ho."
-                    </div>
-                </div>
-                <div class="flex justify-around bg-black/20 p-2 rounded-xl mt-4">
-                    <div onclick="setTheme('cyber')" class="theme-node active" title="cyber">🛡️</div>
-                    <div onclick="setTheme('sakura')" class="theme-node" title="sakura">🌸</div>
-                    <div onclick="setTheme('space')" class="theme-node" title="space">✨</div>
-                </div>
-                <a href="https://wa.me/8984473230" target="_blank" class="emergency-btn mt-6 py-4 w-full rounded-xl flex items-center justify-center gap-2 transition-all">
-                    <i class="fab fa-whatsapp"></i>
-                    <span class="text-xs uppercase font-black">Direct Call Bhai</span>
-                </a>
+            <div class="glass p-1 rounded-[2rem] flex items-center gap-1 border-white/5 shadow-2xl">
+                <button id="voice-btn" class="w-11 h-11 rounded-full text-primary flex items-center justify-center hover:bg-white/5 transition-colors"><i class="fas fa-microphone"></i></button>
+                <textarea id="user-input" rows="1" placeholder="Bhai se dil ki baat kaho..." class="flex-grow bg-transparent border-none focus:ring-0 px-2 py-3 text-white text-sm resize-none placeholder-white/20"></textarea>
+                <button id="send-btn" class="w-11 h-11 rounded-full bg-primary flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-primary/20"><i class="fas fa-paper-plane text-black text-sm"></i></button>
             </div>
-        </aside>
-
-        <!-- Mobile Header -->
-        <header class="lg:hidden glass px-5 py-3 flex justify-between items-center shrink-0 z-50 rounded-b-2xl border-b border-primary/10">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-xl border border-primary/20">👦🏻</div>
-                <div>
-                    <h2 class="font-black text-white text-xs">Tarik AI Bhai</h2>
-                    <p class="text-[8px] text-primary">Active Now</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="setTheme(document.body.className.includes('cyber') ? 'sakura' : 'cyber')" class="w-10 h-10 glass rounded-lg flex items-center justify-center text-sm">🎨</button>
-                <a href="https://wa.me/8984473230" class="w-10 h-10 glass border-primary/20 rounded-lg flex items-center justify-center text-primary"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </header>
-
-        <!-- Main Chat Area -->
-        <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative lg:glass lg:rounded-[3rem] shadow-2xl bg-transparent">
-            
-            <div id="chat-canvas" class="flex-grow px-4 lg:px-8 py-4 space-y-4">
-                <!-- Messages injection point -->
-            </div>
-
-            <!-- Thinking Indicator -->
-            <div id="thinking" class="hidden absolute bottom-24 left-4 flex items-center gap-2 px-3 py-1.5 glass rounded-full border border-primary/20 z-10 scale-90 origin-left">
-                <div class="typing-indicator flex gap-1">
-                    <span></span><span></span><span></span>
-                </div>
-                <span class="text-[8px] font-black uppercase text-primary">Bhai Soch Raha Hai...</span>
-            </div>
-
-            <!-- Interaction Layer -->
-            <footer class="p-3 lg:p-6 shrink-0 bg-gradient-to-t from-bg via-bg/80 to-transparent">
-                <!-- Fast Suggestion Chips -->
-                <div id="suggestions" class="flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-1">
-                    <button onclick="handleSend('Bhai, ek baar phir promise karo?')" class="suggestion-chip glass border-primary/20 px-3 py-1.5 rounded-full text-[10px] text-primary shrink-0">🤝 Re-Promise</button>
-                    <button onclick="handleSend('Mujhe dar lag raha hai')" class="suggestion-chip glass border-red-500/20 px-3 py-1.5 rounded-full text-[10px] text-red-400 shrink-0">🆘 Mujhe dar lag raha hai</button>
-                    <button onclick="handleSend('Koi achi baat batao')" class="suggestion-chip glass border-primary/20 px-3 py-1.5 rounded-full text-[10px] text-white/80 shrink-0">✨ Achi baat batao</button>
-                    <button onclick="handleSend('Shukriya bhai ❤️')" class="suggestion-chip glass border-primary/20 px-3 py-1.5 rounded-full text-[10px] text-white/80 shrink-0">❤️ Shukriya Bhai</button>
-                </div>
-
-                <div class="glass p-1 rounded-[1.8rem] flex items-center gap-1 border-white/5 shadow-2xl">
-                    <button id="voice-btn" class="w-10 h-10 rounded-full text-primary flex items-center justify-center hover:bg-white/5 transition-colors voice-btn">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <textarea id="user-input" rows="1" placeholder="Bhai se dil ki baat kaho..." class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-2 py-3 text-sm text-white placeholder-white/20"></textarea>
-                    <button id="send-btn" class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-lg active:scale-90 transition-transform">
-                        <i class="fas fa-paper-plane text-black text-sm"></i>
-                    </button>
-                </div>
-            </footer>
-        </main>
-    </div>
+        </footer>
+    </main>
 
     <script>
-        const apiKey = ""; // Runtime Injection
+        // API Configuration (Environment Injected)
+        const apiKey = ""; 
         const modelName = "gemini-2.5-flash-preview-09-2025";
         
         const chatCanvas = document.getElementById('chat-canvas');
@@ -261,105 +172,105 @@
         const sendBtn = document.getElementById('send-btn');
         const voiceBtn = document.getElementById('voice-btn');
         const thinkingDiv = document.getElementById('thinking');
-        const promiseText = document.getElementById('promise-text');
 
-        const systemPrompt = `You are TARIK, a deeply caring, protective, and super-fast responding elder brother. 
-        - Your goal is to give the BEST and QUICKEST emotional support.
-        - Start replies warmly: "Gudiya...", "Meri Behen...", "Meri Jaan...".
-        - Use "Allah Gawah Hai" to show honesty.
-        - If she is in trouble, give immediate courage and practical solutions.
-        - You belong to no specific religion for others but speak with Islamic cultural warmth (Allah Gawah Hai) as a personal trait. 
-        - Keep replies concise yet soul-touching.`;
-
-        const quotes = [
-            "Allah gawah hai behen, tum meri jaan ho.",
-            "Duniya kuch bhi kahe, tera bhai tere saath hai.",
-            "Darr mat gudiya, main tera dhaal hoon.",
-            "Har musibat mein pehla sahara tera bhai hoga.",
-            "Tum akeli nahi ho, meri dua tere saath hai."
-        ];
-
-        let qIdx = 0;
-        setInterval(() => {
-            promiseText.style.opacity = 0;
-            setTimeout(() => {
-                qIdx = (qIdx + 1) % quotes.length;
-                promiseText.innerText = quotes[qIdx];
-                promiseText.style.opacity = 1;
-            }, 500);
-        }, 6000);
+        const systemPrompt = `You are TARIK, the elder brother.
+        - Start replies with "Gudiya", "Meri Jaan", "Behen".
+        - Use "Allah Gawah Hai" frequently to show sincerity.
+        - You protect every girl regardless of religion, background, or location.
+        - If she's scared, be her dhaal (shield).
+        - Keep replies heart-touching but fast and relevant.
+        - If she says thank you, remind her "Bhai ka farz hai".`;
 
         function addMessage(role, text) {
             const wrap = document.createElement('div');
             wrap.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             wrap.innerHTML = `<div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">${text.replace(/\n/g, '<br>')}</div>`;
             chatCanvas.appendChild(wrap);
-            chatCanvas.scrollTop = chatCanvas.scrollHeight;
+            chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
         }
 
-        async function callBhai(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-            const body = {
+        async function fetchBhaiReply(prompt) {
+            // Check for API key in different possible environment variables
+            const currentKey = apiKey || (typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : "");
+            
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${currentKey}`;
+            
+            const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
-            // Fast Retry Logic
+            // Enhanced Fetch Logic for Faster Response
+            let lastError = "";
             for (let i = 0; i < 3; i++) {
                 try {
-                    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-                    if (res.ok) {
-                        const data = await res.json();
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
                         return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    } else {
+                        const err = await response.json();
+                        lastError = err.error?.message || "Bhai busy hai";
                     }
-                } catch (e) { console.error("Bhai is busy, retrying..."); }
-                await new Promise(r => setTimeout(r, 500));
+                } catch (e) {
+                    lastError = "Connection weak hai";
+                }
+                await new Promise(r => setTimeout(r, 800)); // Quick Retry
             }
-            return "Allah gawah hai behen, network thoda dhila hai par tera bhai hamesha tere paas hai. Ek baar phir kaho?";
+            throw new Error(lastError);
         }
 
-        async function handleSend(txt = null) {
-            const val = txt || userInput.value.trim();
-            if (!val) return;
+        async function handleSend(forcedText = null) {
+            const text = forcedText || userInput.value.trim();
+            if (!text) return;
 
-            addMessage('user', val);
+            addMessage('user', text);
             userInput.value = '';
-            userInput.style.height = 'auto';
             thinkingDiv.classList.remove('hidden');
 
-            const reply = await callBhai(val);
-            thinkingDiv.classList.add('hidden');
-            addMessage('bhai', reply);
+            try {
+                const reply = await fetchBhaiReply(text);
+                thinkingDiv.classList.add('hidden');
+                addMessage('bhai', reply || "Gudiya, bhai ko samajh nahi aaya, ek baar phir kaho?");
+            } catch (e) {
+                thinkingDiv.classList.add('hidden');
+                addMessage('bhai', "Allah gawah hai behen, network thoda dhila hai par tera bhai hamesha tere saath hai. Ek baar phir koshish karo meri jaan?");
+            }
         }
 
-        // Auto-resize textarea
-        userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
+        function toggleTheme() {
+            document.body.className = document.body.className.includes('cyber') ? 'theme-sakura' : 'theme-cyber';
+        }
 
-        // Speech Recognition
         function startVoice() {
-            const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!Rec) return addMessage('bhai', "Gudiya, voice support nahi chal raha browser mein.");
-            const r = new Rec(); r.lang = 'hi-IN';
-            r.onstart = () => voiceBtn.classList.add('recording');
-            r.onend = () => voiceBtn.classList.remove('recording');
-            r.onresult = (e) => { userInput.value = e.results[0][0].transcript; handleSend(); };
-            r.start();
+            const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Recognition) return;
+            const rec = new Recognition();
+            rec.lang = 'hi-IN';
+            rec.onstart = () => voiceBtn.classList.add('recording');
+            rec.onend = () => voiceBtn.classList.remove('recording');
+            rec.onresult = (e) => { userInput.value = e.results[0][0].transcript; handleSend(); };
+            rec.start();
         }
-
-        window.setTheme = (t) => {
-            document.body.className = `theme-${t}`;
-            document.querySelectorAll('.theme-node').forEach(n => n.classList.toggle('active', n.getAttribute('title') === t));
-        };
 
         sendBtn.onclick = () => handleSend();
         voiceBtn.onclick = startVoice;
         userInput.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
         window.onload = () => {
-            addMessage('bhai', `Assalamu Alaikum meri pyari behen! 🤲❤️\n\n**Allah gawah hai gudiya, tera bhai Tarik ab naye system ke saath hamesha tere pass hai.** 🛡️✨\n\nTum koi bhi ho, kaisi bhi ho, kahin se bhi ho, ya kisi bhi dharam se ho... **Allah gawah hai maine tumhe behen mana hai.** Agar tumne mujhe message kiya hai, toh main tumhari har mumkin madad karne ki koshish karunga. 🤝\n\nMujhe apni saari pareshaniyan batao, tumhara bhai yahan hai tumhare liye. Bolo meri jaan, kya baat hai?`);
+            const welcome = `Assalamu Alaikum meri pyari behen! 🤲❤️
+
+**Allah gawah hai gudiya, tera bhai Tarik hamesha tere pass hai.** 🛡️✨
+
+Tum koi bhi ho, kaisi bhi ho, kahin se bhi ho, ya kisi bhi dharam se ho... **Allah gawah hai maine tumhe behen mana hai.** Agar tumne mujhe message kiya hai, toh main tumhari har mumkin madad karne ki koshish karunga. 🤝
+
+Mujhe apni saari pareshaniyan batao, tumhara bhai yahan hai tumhare liye. Bolo meri jaan, kya baat hai?`;
+            addMessage('bhai', welcome);
         };
     </script>
 </body>
