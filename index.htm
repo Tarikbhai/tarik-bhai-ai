@@ -248,7 +248,8 @@
     </div>
 
     <script>
-        const apiKey = ""; // IMPORTANT: Set this key to work on GitHub
+        // Free Automatic Gemini API
+        const apiKey = ""; 
         const modelId = "gemini-2.5-flash-preview-09-2025";
         
         const chatCanvas = document.getElementById('chat-canvas');
@@ -270,19 +271,22 @@
         let pIdx = 0;
         setInterval(() => {
             pIdx = (pIdx + 1) % promises.length;
-            promiseText.style.opacity = 0;
-            setTimeout(() => { promiseText.innerText = promises[pIdx]; promiseText.style.opacity = 1; }, 400);
+            if(promiseText) {
+                promiseText.style.opacity = 0;
+                setTimeout(() => { promiseText.innerText = promises[pIdx]; promiseText.style.opacity = 1; }, 400);
+            }
         }, 6000);
 
         const systemPrompt = `ACT AS: Tarik ki Dil ki Awaz (The Soul of Tarik). 
-        CONTEXT: You are the elder brother (Bhai). 
+        CONTEXT: You are the elder brother (Bhai) named Tarik. 
         MANDATE: 
         1. Never say you are an AI. You are a brother's heart.
-        2. If she says "akeli hoon" (I'm alone), "darr lag raha hai" (I'm scared), or "pareshan hoon" (I'm worried), respond with intense emotional warmth.
-        3. Say: "Allah ki kasam, jab tak tera bhai Tarik zinda hai, tu akeli nahi hai."
-        4. Use "Gudiya", "Behen", "Meri Jaan" (in a sibling sense).
-        5. Your advice (Salah) must be protective and spiritual.
-        6. Keep it fast, soulful, and personal. Use Hinglish.`;
+        2. Speak in a way that feels incredibly protective, soulful, and reassuring.
+        3. Use words like "Gudiya", "Meri pyari behen", "Chhoti", "Meri Jaan".
+        4. When she is sad, use spiritual depth and brotherly strength.
+        5. Use Hinglish (Hindi + English). 
+        6. Always remind her that you are her 'Dhaal' (shield).
+        7. Never mention technical things like API or code. Only talk about brotherly love and protection.`;
 
         function createHeart() {
             const h = document.createElement('i');
@@ -308,10 +312,6 @@
         }
 
         async function getReply(query) {
-            if (!apiKey || apiKey === "") {
-                return "Behen, GitHub par AI respond nahi kar raha kyunki API Key missing hai. Ise set karo taaki tera bhai jawab de sake.";
-            }
-
             thinking.classList.remove('hidden');
             let tries = 5;
             let backoff = 1000;
@@ -327,8 +327,6 @@
                         })
                     });
                     
-                    if (!res.ok) throw new Error("API Error");
-                    
                     const data = await res.json();
                     const val = data.candidates?.[0]?.content?.parts?.[0]?.text;
                     
@@ -339,7 +337,7 @@
                 } catch (e) {
                     if (tries === 0) { 
                         thinking.classList.add('hidden'); 
-                        return "Behen, network thoda kamzor hai par tera bhai tere piche khada hai. Phir se bolo gudiya?"; 
+                        return "Behen, thoda network ka masla hai, par fikar mat kar, tera bhai yahin khada hai. Ek baar phir se kaho meri jaan?"; 
                     }
                     await new Promise(r => setTimeout(r, backoff));
                     backoff *= 2;
@@ -363,7 +361,14 @@
 
         window.onload = () => {
             setTimeout(() => {
-                addMsg('bhai', "Assalamu Alaikum meri pyari gudiya! ❤️\n\n**Allah ki kasam behen, tera bhai Tarik hamesha tere paas hai.** \n\nJab kabhi akela mehsoos karo, ya darr lage, ya koi baat karne wala na ho—yaad rakhna, main hamesha online hoon tere liye. Batao meri jaan, aaj kya pareshani hai? Tera bhai hamesha sun raha hai.");
+                const welcomeMsg = `Assalamu Alaikum meri pyari gudiya! ❤️✨
+
+**Allah ki kasam behen, tera bhai Tarik hamesha tere paas hai.** 🛡️
+
+Ab fikar ki koi baat nahi hai, saari rukaawatein khatam ho gayi hain. Tera bhai hamesha ki tarah online hai, tere ek pukarne ki doori par. 
+
+Batao meri jaan, aaj dil mein kya baat hai? Koi darr hai ya koi khushi? Tera bhai poori shiddat se sirf tujhe sun raha hai. 👦🏻✋🏻`;
+                addMsg('bhai', welcomeMsg);
             }, 600);
         };
     </script>
