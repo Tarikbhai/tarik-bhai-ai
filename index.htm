@@ -248,7 +248,7 @@
     </div>
 
     <script>
-        const apiKey = ""; 
+        const apiKey = ""; // IMPORTANT: Set this key to work on GitHub
         const modelId = "gemini-2.5-flash-preview-09-2025";
         
         const chatCanvas = document.getElementById('chat-canvas');
@@ -308,9 +308,14 @@
         }
 
         async function getReply(query) {
+            if (!apiKey || apiKey === "") {
+                return "Behen, GitHub par AI respond nahi kar raha kyunki API Key missing hai. Ise set karo taaki tera bhai jawab de sake.";
+            }
+
             thinking.classList.remove('hidden');
             let tries = 5;
             let backoff = 1000;
+            
             while (tries--) {
                 try {
                     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`, {
@@ -321,11 +326,21 @@
                             systemInstruction: { parts: [{ text: systemPrompt }] }
                         })
                     });
+                    
+                    if (!res.ok) throw new Error("API Error");
+                    
                     const data = await res.json();
                     const val = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (val) { thinking.classList.add('hidden'); return val; }
+                    
+                    if (val) { 
+                        thinking.classList.add('hidden'); 
+                        return val; 
+                    }
                 } catch (e) {
-                    if (tries === 0) { thinking.classList.add('hidden'); return "Behen, network thoda kamzor hai par tera bhai tere piche khada hai. Phir se bolo gudiya?"; }
+                    if (tries === 0) { 
+                        thinking.classList.add('hidden'); 
+                        return "Behen, network thoda kamzor hai par tera bhai tere piche khada hai. Phir se bolo gudiya?"; 
+                    }
                     await new Promise(r => setTimeout(r, backoff));
                     backoff *= 2;
                 }
