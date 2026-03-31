@@ -27,6 +27,7 @@
             scrollbar-width: none; 
             box-sizing: border-box;
             transition: background-color 0.4s ease, border-color 0.4s ease;
+            touch-action: manipulation;
         }
         *::-webkit-scrollbar { display: none; }
 
@@ -39,6 +40,8 @@
             width: 100vw;
             position: fixed;
             margin: 0;
+            display: flex;
+            flex-direction: column;
         }
 
         .background-container {
@@ -89,6 +92,7 @@
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             max-width: 85%;
             font-size: 1rem;
+            word-wrap: break-word;
         }
 
         @keyframes popIn {
@@ -100,16 +104,16 @@
             background: rgba(255, 255, 255, 0.05);
             border-left: 4px solid var(--primary);
             color: #f1f5f9;
-            border-radius: 24px 24px 24px 4px;
-            padding: 1.2rem 1.4rem;
+            border-radius: 20px 20px 20px 4px;
+            padding: 1rem 1.2rem;
         }
 
         .user-bubble {
             background: var(--primary);
             color: #020617;
             font-weight: 700;
-            border-radius: 24px 24px 4px 24px;
-            padding: 1rem 1.4rem;
+            border-radius: 20px 20px 4px 20px;
+            padding: 0.8rem 1.2rem;
         }
 
         .handwriting { font-family: 'Caveat', cursive; }
@@ -120,6 +124,7 @@
             font-weight: 800;
             box-shadow: 0 8px 25px rgba(0, 255, 204, 0.2);
             animation: pulse-glow 2s infinite;
+            cursor: pointer;
         }
 
         @keyframes pulse-glow {
@@ -131,6 +136,9 @@
         #chat-canvas {
             mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+            overflow-y: auto;
+            flex-grow: 1;
+            scroll-behavior: smooth;
         }
 
         .theme-node {
@@ -157,6 +165,9 @@
         }
 
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Ensure input doesn't zoom on focus */
+        input, textarea { font-size: 16px !important; }
     </style>
 </head>
 <body class="theme-cyber">
@@ -166,9 +177,9 @@
         <div id="ball-2" class="mesh-ball w-[70vw] h-[70vw] bg-teal-600/20 bottom-[-10%] right-[-10%]" style="animation-delay: -3s;"></div>
     </div>
 
-    <div class="w-full h-full flex flex-col lg:flex-row p-0 lg:p-6 lg:gap-6">
+    <div class="w-full h-full flex flex-col lg:flex-row p-0 lg:p-6 lg:gap-6 relative overflow-hidden">
         
-        <!-- Sidebar -->
+        <!-- Sidebar (Desktop) -->
         <aside class="hidden lg:flex w-[380px] flex-col gap-6 h-full shrink-0">
             <div class="glass p-8 rounded-[3rem] text-center relative overflow-hidden">
                 <div class="badge-verified bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold border border-primary/20 mb-4 inline-block">
@@ -224,9 +235,9 @@
         </header>
 
         <!-- Main Chat -->
-        <main class="flex-grow flex flex-col h-full overflow-hidden relative lg:glass lg:rounded-[3.5rem] shadow-2xl">
-            <div id="chat-canvas" class="flex-grow overflow-y-auto px-4 lg:px-10 py-6 space-y-6">
-                <!-- Messages -->
+        <main class="flex-grow flex flex-col min-h-0 overflow-hidden relative lg:glass lg:rounded-[3.5rem] shadow-2xl bg-transparent">
+            <div id="chat-canvas" class="flex-grow px-4 lg:px-10 py-6 space-y-6">
+                <!-- Messages populate here -->
             </div>
 
             <div id="thinking" class="hidden absolute bottom-24 left-6 lg:bottom-32 lg:left-10 flex items-center gap-3 px-4 py-2 glass rounded-full border border-primary/30 z-10">
@@ -234,21 +245,21 @@
                 <span class="text-[9px] font-black uppercase tracking-widest text-primary">Tarik Sun Raha Hai...</span>
             </div>
 
-            <footer class="p-4 lg:p-8 shrink-0">
+            <footer class="p-4 lg:p-8 shrink-0 bg-transparent">
                 <div class="glass p-1.5 rounded-[2rem] flex items-center gap-2 border-white/10 focus-within:border-primary/40 transition-all shadow-xl">
-                    <textarea id="user-input" rows="1" placeholder="Darr lag raha hai? Akeli ho? Bhai se kaho..." 
+                    <textarea id="user-input" rows="1" placeholder="Bhai se kaho..." 
                         class="flex-grow bg-transparent border-none focus:ring-0 resize-none px-4 py-3 text-base text-white placeholder-white/20 font-medium"></textarea>
-                    <button id="send-btn" class="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-90 transition-all">
+                    <button id="send-btn" class="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-90 transition-all cursor-pointer">
                         <i class="fas fa-paper-plane text-black text-base lg:text-lg"></i>
                     </button>
                 </div>
-                <p class="text-[8px] text-center mt-4 text-white/20 font-bold tracking-[0.4em] uppercase">Allah ki Kasam • Main Tere Saath Hoon</p>
+                <p class="text-[8px] text-center mt-3 text-white/20 font-bold tracking-[0.4em] uppercase">Allah ki Kasam • Main Tere Saath Hoon</p>
             </footer>
         </main>
     </div>
 
     <script>
-        // Free Automatic Gemini API
+        // API Configuration
         const apiKey = ""; 
         const modelId = "gemini-2.5-flash-preview-09-2025";
         
@@ -308,7 +319,10 @@
             div.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'}`;
             div.innerHTML = `<div class="msg-bubble ${role === 'user' ? 'user-bubble' : 'bhai-bubble'}">${text.replace(/\n/g, '<br>')}</div>`;
             chatCanvas.appendChild(div);
-            chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
+            // Ensure it scrolls to bottom on mobile
+            setTimeout(() => {
+                chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
+            }, 50);
         }
 
         async function getReply(query) {
@@ -337,7 +351,7 @@
                 } catch (e) {
                     if (tries === 0) { 
                         thinking.classList.add('hidden'); 
-                        return "Behen, thoda network ka masla hai, par fikar mat kar, tera bhai yahin khada hai. Ek baar phir se kaho meri jaan?"; 
+                        return "Behen, network thoda kamzor hai par tera bhai yahin hai. Phir se kaho?"; 
                     }
                     await new Promise(r => setTimeout(r, backoff));
                     backoff *= 2;
@@ -355,9 +369,19 @@
             addMsg('bhai', reply);
         }
 
-        sendBtn.onclick = chat;
+        sendBtn.addEventListener('click', chat);
         userInput.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chat(); } };
-        userInput.oninput = function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; };
+        userInput.oninput = function() { 
+            this.style.height = 'auto'; 
+            this.style.height = (this.scrollHeight > 120 ? 120 : this.scrollHeight) + 'px'; 
+        };
+
+        // Focus fix for mobile keyboard
+        userInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                chatCanvas.scrollTo({ top: chatCanvas.scrollHeight, behavior: 'smooth' });
+            }, 300);
+        });
 
         window.onload = () => {
             setTimeout(() => {
